@@ -1,4 +1,5 @@
 import express from 'express';
+import bodyParser from 'body-parser';
 
 const app = express();
 const port = 8080;
@@ -25,6 +26,8 @@ const posts: IPost[] = [
 	},
 ]
 
+app.use(bodyParser.json());
+
 app.get('/', (req, res) => {
 	res.send('Hello World');
 });
@@ -36,8 +39,8 @@ app.listen(port, () => {
 // 전체 글 조회
 app.get('/api/v1/posts', (req, res) => {
 	try {
-		res.send(posts);
-	} catch(error) {
+		res.json(posts);
+	} catch (error) {
 		return res.status(500).json({
 			error: {
 				code: 500,
@@ -50,18 +53,18 @@ app.get('/api/v1/posts', (req, res) => {
 // 개별 글 조회
 app.get('/api/v1/posts/:postId', (req, res) => {
 	try {
-		const requestId = parseInt(req.params.postId);
-		const post = posts.find(p => p.postId === requestId);
+		const { postId } = req.params;
+		const post = posts.find(p => p.postId === parseInt(postId));
 		if (!post) {
 			return res.status(404).json({
 				error: {
 					code: 1,
-					message: `postID '${requestId}' NOT FOUND`
+					message: `postID '${postId}' Not found`
 				}
 			});
 		}
 		return res.send(post);
-	} catch(error) {
+	} catch (error) {
 		return res.status(500).json({
 			error: {
 				code: 500,
@@ -70,3 +73,117 @@ app.get('/api/v1/posts/:postId', (req, res) => {
 		});
 	}
 });
+
+// 글 작성
+app.post('/api/v1/posts', (req, res) => {
+	try {
+		const { author, title, content } = req.body;
+		if (author === '' && title === '') {
+			return res.status(404).json({
+				error: {
+					code: 2,
+					message: 'Author and Title cannot be empty string'
+				}
+			});
+		} else if (author === '') {
+			return res.status(404).json({
+				error: {
+					code: 3,
+					message: 'Author cannot be empty string'
+				}
+			});
+		} else if (title === '') {
+			return res.status(404).json({
+				error: {
+					code: 4,
+					message: 'Title cannot be empty string'
+				}
+			});
+		} else {
+			return res.status(201).json({
+				data: {
+					author,
+					title,
+					content
+				}
+			});
+		}
+	} catch (error) {
+		return res.status(500).json({
+			error: {
+				code: 500,
+				message: 'Internal Server Error'
+			}
+		});
+	}
+});
+
+// 글 수정
+app.patch('/api/v1/posts/:postId', (req, res) => {
+	try {
+		const { postId } = req.params;
+		const { author, title, content } = req.body;
+		const post = posts.find(p => p.postId === parseInt(postId));
+		if (!post) {
+			return res.status(404).json({
+				error: {
+					code: 1,
+					message: `postID '${postId}' Not found.`
+				}
+			});
+		} else if (title === '') {
+			return res.status(404).json({
+				error: {
+					code: 4,
+					message: 'Title cannot be empty string'
+				}
+			});
+		} else {
+			return res.status(201).json({
+				data: {
+					postId,
+					author,
+					title,
+					content
+				}
+			});
+		}
+	} catch (error) {
+		return res.status(500).json({
+			error: {
+				code: 500,
+				message: 'Internal Server Error'
+			}
+		});
+	}
+})
+
+
+// 글 삭제
+app.delete('/api/v1/posts/:postId', (req, res) => {
+	try {
+		const { postId } = req.params;
+		const post = posts.find(p => p.postId === parseInt(postId));
+		if (!post) {
+			return res.status(404).json({
+				error: {
+					code: 1,
+					message: `postID '${postId}' Not found.`
+				}
+			});
+		} else {
+			return res.status(200).json(
+				'Successfully deleted'
+			);
+		}
+	} catch (error) {
+		return res.status(500).json({
+			error: {
+				code: 500,
+				message: 'Internal Server Error'
+			}
+		});
+	}
+})
+
+export default app;
