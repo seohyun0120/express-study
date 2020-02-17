@@ -4,6 +4,8 @@ export interface IPost extends Document {
 	author: string;
 	title: string;
 	content: string;
+	createdAt: Date;
+	updatedAt: Date;
 }
 
 const PostSchema: Schema = new Schema({
