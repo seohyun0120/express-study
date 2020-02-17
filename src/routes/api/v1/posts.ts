@@ -1,8 +1,8 @@
-import express from 'express';
-import { PostModel } from '../../../models/post';
+import express, { Request, Response, NextFunction } from 'express';
+import { PostModel, IPost } from '../../../models/post';
 const router = express.Router();
 
-router.get('/', async (req, res) => {
+router.get('/', async (req: Request, res: Response) => {
   try {
     let posts = await PostModel.find({});
     res.status(200).json({
@@ -18,7 +18,7 @@ router.get('/', async (req, res) => {
   }
 });
 
-router.get('/:postId', async (req, res) => {
+router.get('/:postId', async (req: Request, res: Response) => {
   try {
     const { postId } = req.params;
     let post = await PostModel.findById(postId);
@@ -49,9 +49,9 @@ router.get('/:postId', async (req, res) => {
   }
 })
 
-router.post('/', async (req, res, next) => {
+router.post('/', async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { author, title, content } = req.body;
+    const { author, title, content } = req.body as IPost;
     if (author === '' && title === '') {
       return res.status(404).json({
         error: {
@@ -105,7 +105,7 @@ router.post('/', async (req, res, next) => {
   }
 });
 
-router.patch('/:postId', async (req, res) => {
+router.patch('/:postId', async (req: Request, res: Response) => {
   try {
     const { postId } = req.params;
     const { title, content } = req.body;
@@ -149,7 +149,7 @@ router.patch('/:postId', async (req, res) => {
   }
 })
 
-router.delete('/:postId', async (req, res) => {
+router.delete('/:postId', async (req: Request, res: Response) => {
   try {
     const { postId } = req.params;
     let deletePost = await PostModel.deleteOne({ _id: postId });
