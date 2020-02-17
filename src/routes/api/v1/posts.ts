@@ -26,7 +26,7 @@ router.get('/:postId', async (req: Request, res: Response) => {
       return res.status(404).json({
         error: {
           code: 1,
-          message: `postID '${postId}' Not found`
+          message: `postID '${postId}' Not found.`
         }
       });
     }
@@ -53,21 +53,21 @@ router.post('/', async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { author, title, content } = req.body as IPost;
     if (author === '' && title === '') {
-      return res.status(404).json({
+      return res.status(400).json({
         error: {
           code: 2,
           message: 'Author and Title cannot be empty string'
         }
       });
     } else if (author === '') {
-      return res.status(404).json({
+      return res.status(400).json({
         error: {
           code: 3,
           message: 'Author cannot be empty string'
         }
       });
     } else if (title === '') {
-      return res.status(404).json({
+      return res.status(400).json({
         error: {
           code: 4,
           message: 'Title cannot be empty string'
@@ -118,7 +118,7 @@ router.patch('/:postId', async (req: Request, res: Response) => {
         }
       });
     } else if (title === '') {
-      return res.status(404).json({
+      return res.status(400).json({
         error: {
           code: 4,
           message: 'Title cannot be empty string'
