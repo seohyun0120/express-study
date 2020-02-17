@@ -4,7 +4,7 @@
   "main": "index.js",
   "scripts": {
     "start": "tsc && node dist",
-    "start:dev": "nodemon",    
+    "start:dev": "nodemon",
     "test": "mocha --exit --timeout 10000"
   },
   "repository": {
