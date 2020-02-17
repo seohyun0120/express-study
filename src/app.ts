@@ -31,3 +31,5 @@ const db = () => {
 };
 
 db();
+
+export default app;
