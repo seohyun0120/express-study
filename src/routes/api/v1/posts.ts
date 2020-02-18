@@ -1,6 +1,7 @@
 import express, { Request, Response, NextFunction } from 'express';
 import { PostModel, IPost } from '../../../models/post';
-import isNull from 'lodash/isNull';
+import { isNull, omit } from 'lodash';
+import mongoose from 'mongoose';
 
 const router = express.Router();
 
@@ -23,8 +24,8 @@ router.get('/', async (req: Request, res: Response) => {
 router.get('/:postId', async (req: Request, res: Response) => {
   try {
     const { postId } = req.params;
-    let post = await PostModel.findById(postId);
-    if (!post) {
+    const post = await PostModel.findById(postId);
+    if (isNull(post)) {
       return res.status(404).json({
         error: {
           code: 1,
@@ -36,6 +37,14 @@ router.get('/:postId', async (req: Request, res: Response) => {
       data: post
     });
   } catch (error) {
+    if (error instanceof mongoose.Error.CastError) {
+      return res.status(404).json({
+        error: {
+          code: 1,
+          message: `postId '${req.params.postId} Not found.`
+        }
+      })
+    }
     return res.status(500).json({
       error: {
         code: 500,
@@ -110,7 +119,6 @@ router.patch('/:postId', async (req: Request, res: Response) => {
       title,
       content
     }, { new: true });
-    console.log('updated post: ', post);
     if (isNull(post)) {
       return res.status(404).json({
         error: {
@@ -138,6 +146,15 @@ router.patch('/:postId', async (req: Request, res: Response) => {
       });
     }
   } catch (error) {
+    if (error instanceof mongoose.Error.CastError) {
+      return res.status(404).json({
+        error: {
+          code: 1,
+          message: `postId '${req.params.postId} Not found.`
+        }
+      })
+    };
+
     return res.status(500).json({
       error: {
         code: 500,
@@ -164,6 +181,15 @@ router.delete('/:postId', async (req: Request, res: Response) => {
       );
     }
   } catch (error) {
+    if (error instanceof mongoose.Error.CastError) {
+      return res.status(404).json({
+        error: {
+          code: 1,
+          message: `postId '${req.params.postId} Not found.`
+        }
+      })
+    }
+
     return res.status(500).json({
       error: {
         code: 500,
