@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "start": "tsc && node dist",
-    "start:dev": "nodemon",
+    "start": "env NODE_ENV=prod tsc && node dist",
+    "start:dev": "env NODE_ENV=dev nodemon",
     "test": "mocha --exit --timeout 10000"
   },
   "repository": {
@@ -16,6 +16,7 @@
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.19.0",
+    "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "lodash": "^4.17.15",
     "mongoose": "^5.8.12"
