@@ -1,5 +1,7 @@
 import express, { Request, Response, NextFunction } from 'express';
 import { PostModel, IPost } from '../../../models/post';
+import isNull from 'lodash/isNull';
+
 const router = express.Router();
 
 router.get('/', async (req: Request, res: Response) => {
@@ -31,13 +33,7 @@ router.get('/:postId', async (req: Request, res: Response) => {
       });
     }
     return res.status(200).json({
-      data: {
-        _id: post._id,
-        author: post.author,
-        title: post.title,
-        content: post.content,
-        createdAt: post.createdAt,
-      }
+      data: post
     });
   } catch (error) {
     return res.status(500).json({
@@ -90,6 +86,7 @@ router.post('/', async (req: Request, res: Response, next: NextFunction) => {
               title,
               content,
               createdAt: post.createdAt,
+              updatedAt: post.updatedAt
             }
           });
         }
@@ -109,8 +106,12 @@ router.patch('/:postId', async (req: Request, res: Response) => {
   try {
     const { postId } = req.params;
     const { title, content } = req.body;
-    let post = await PostModel.findById(postId);
-    if (!post) {
+    let post = await PostModel.findByIdAndUpdate(postId, {
+      title,
+      content
+    }, { new: true });
+    console.log('updated post: ', post);
+    if (isNull(post)) {
       return res.status(404).json({
         error: {
           code: 1,
@@ -125,10 +126,6 @@ router.patch('/:postId', async (req: Request, res: Response) => {
         }
       });
     } else {
-      await post.updateOne({
-        title,
-        content
-      });
       return res.status(201).json({
         data: {
           _id: post._id,
@@ -136,6 +133,7 @@ router.patch('/:postId', async (req: Request, res: Response) => {
           title,
           content,
           createdAt: post.createdAt,
+          updatedAt: post.updatedAt
         }
       });
     }
