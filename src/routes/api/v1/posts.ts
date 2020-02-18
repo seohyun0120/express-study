@@ -1,15 +1,16 @@
 import express, { Request, Response, NextFunction } from 'express';
 import { PostModel, IPost } from '../../../models/post';
-import { isNull, omit } from 'lodash';
+import { isNull, map, omit } from 'lodash';
 import mongoose from 'mongoose';
 
 const router = express.Router();
 
 router.get('/', async (req: Request, res: Response) => {
   try {
-    let posts = await PostModel.find({});
-    res.status(200).json({
-      data: posts
+    const posts = await PostModel.find({}).lean();
+    const result = map(posts, (p) => omit(p, '__v'));
+    return res.status(200).json({
+      data: result
     });
   } catch (error) {
     return res.status(500).json({
@@ -22,9 +23,9 @@ router.get('/', async (req: Request, res: Response) => {
 });
 
 router.get('/:postId', async (req: Request, res: Response) => {
+  const { postId } = req.params;
   try {
-    const { postId } = req.params;
-    const post = await PostModel.findById(postId);
+    const post = await PostModel.findById(postId).lean();
     if (isNull(post)) {
       return res.status(404).json({
         error: {
@@ -33,15 +34,16 @@ router.get('/:postId', async (req: Request, res: Response) => {
         }
       });
     }
+    const result = omit(post, '__v');
     return res.status(200).json({
-      data: post
+      data: result
     });
   } catch (error) {
     if (error instanceof mongoose.Error.CastError) {
       return res.status(404).json({
         error: {
           code: 1,
-          message: `postId '${req.params.postId} Not found.`
+          message: `postId '${postId} Not found.`
         }
       })
     }
@@ -112,10 +114,10 @@ router.post('/', async (req: Request, res: Response, next: NextFunction) => {
 });
 
 router.patch('/:postId', async (req: Request, res: Response) => {
+  const { postId } = req.params;
   try {
-    const { postId } = req.params;
     const { title, content } = req.body;
-    let post = await PostModel.findByIdAndUpdate(postId, {
+    const post = await PostModel.findByIdAndUpdate(postId, {
       title,
       content
     }, { new: true });
@@ -134,15 +136,9 @@ router.patch('/:postId', async (req: Request, res: Response) => {
         }
       });
     } else {
+      const result = omit(post, '__v');
       return res.status(201).json({
-        data: {
-          _id: post._id,
-          author: post.author,
-          title,
-          content,
-          createdAt: post.createdAt,
-          updatedAt: post.updatedAt
-        }
+        data: result
       });
     }
   } catch (error) {
@@ -150,7 +146,7 @@ router.patch('/:postId', async (req: Request, res: Response) => {
       return res.status(404).json({
         error: {
           code: 1,
-          message: `postId '${req.params.postId} Not found.`
+          message: `postId '${postId} Not found.`
         }
       })
     };
@@ -165,10 +161,10 @@ router.patch('/:postId', async (req: Request, res: Response) => {
 })
 
 router.delete('/:postId', async (req: Request, res: Response) => {
+  const { postId } = req.params;
   try {
-    const { postId } = req.params;
-    let deletePost = await PostModel.deleteOne({ _id: postId });
-    if (deletePost.n === 0 && deletePost.deletedCount === 0) {
+    const post = await PostModel.findByIdAndDelete(postId);
+    if (isNull(post)) {
       return res.status(404).json({
         error: {
           code: 1,
@@ -185,7 +181,7 @@ router.delete('/:postId', async (req: Request, res: Response) => {
       return res.status(404).json({
         error: {
           code: 1,
-          message: `postId '${req.params.postId} Not found.`
+          message: `postId '${postId} Not found.`
         }
       })
     }

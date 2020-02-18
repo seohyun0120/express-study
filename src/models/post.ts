@@ -11,7 +11,7 @@ export interface IPost extends Document {
 const PostSchema: Schema = new Schema({
 	author: { type: String, required: true },
 	title: { type: String, required: true },
-	content: { type: String }
+	content: { type: String },
 }, {
 	timestamps: true,
 });
