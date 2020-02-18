@@ -1,10 +1,13 @@
 import express, { Application } from 'express';
 import bodyParser from 'body-parser';
 import dotenv from 'dotenv';
+import path from 'path';
 import mongoose from 'mongoose';
 import indexRouter from './routes';
 
-dotenv.config();
+dotenv.config({
+  path: path.resolve(__dirname, `./../config/${process.env.NODE_ENV}.env`)
+});
 
 const connectDb = async () => {
   try {
