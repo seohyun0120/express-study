@@ -1,4 +1,4 @@
-import express, { Request, Response, NextFunction } from 'express';
+import express, { Request, Response } from 'express';
 import { PostModel, IPost } from '../../../models/post';
 import { isNull, map, omit } from 'lodash';
 import mongoose from 'mongoose';
@@ -56,7 +56,7 @@ router.get('/:postId', async (req: Request, res: Response) => {
   }
 })
 
-router.post('/', async (req: Request, res: Response, next: NextFunction) => {
+router.post('/', async (req: Request, res: Response) => {
   try {
     const { author, title, content } = req.body as IPost;
     if (author === '' && title === '') {
@@ -81,26 +81,15 @@ router.post('/', async (req: Request, res: Response, next: NextFunction) => {
         }
       });
     } else {
-      const post = new PostModel({
+      const post = await new PostModel({
         title,
         author,
         content,
-      });
-      await post.save((err) => {
-        if (err) {
-          return next(err);
-        } else {
-          return res.status(201).json({
-            data: {
-              _id: post._id,
-              author,
-              title,
-              content,
-              createdAt: post.createdAt,
-              updatedAt: post.updatedAt
-            }
-          });
-        }
+      }).save();
+      const result = omit(post.toObject(), '__v');
+
+      return res.status(201).json({
+        data: result
       });
     }
   } catch (error) {
