@@ -1,7 +1,25 @@
-import express, { Application, Request, Response } from 'express';
+import express, { Application } from 'express';
 import bodyParser from 'body-parser';
+import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import indexRouter from './routes';
+
+dotenv.config();
+
+const connectDb = async () => {
+  try {
+    await mongoose.connect(process.env.MONGO_URI, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+      useFindAndModify: false,
+    });
+    console.info(`Successfully connected to ${process.env.MONGO_URI}`);
+    app.emit('ready');
+  } catch (error) {
+    console.error('Error connecting database: ', error);
+    return process.exit(1);
+  }
+}
 
 const app: Application = express();
 
@@ -9,27 +27,12 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use('/', indexRouter);
 
-app.get('/', (req: Request, res: Response) => {
-  res.send('Welcome @Seohyun')
+app.on('ready', () => {
+  app.listen(process.env.PORT, () => {
+    console.log('server started!');
+  });
 });
 
-app.listen(8080, () => {
-  console.log('server started!')
-});
-
-const MONGO_URI = 'mongodb://172.19.148.76:8000/post';
-const db = () => {
-  mongoose
-    .connect(MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
-    .then(() => {
-      return console.info(`Successfully connected to ${MONGO_URI}`);
-    })
-    .catch((error) => {
-      console.error('Error connecting database: ', error);
-      return process.exit(1);
-    });
-};
-
-db();
+connectDb();
 
 export default app;
