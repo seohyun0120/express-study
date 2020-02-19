@@ -9,14 +9,16 @@ dotenv.config({
   path: path.resolve(__dirname, `./../config/${process.env.NODE_ENV}.env`)
 });
 
+const MONGO_URI=`${process.env.MONGO_ADDRESS}${process.env.DB_NAME}`;
+
 const connectDb = async () => {
   try {
-    await mongoose.connect(process.env.MONGO_URI, {
+    await mongoose.connect(MONGO_URI, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
       useFindAndModify: false,
     });
-    console.info(`Successfully connected to ${process.env.MONGO_URI}`);
+    console.info(`Successfully connected to ${MONGO_URI}`);
     app.emit('ready');
   } catch (error) {
     console.error('Error connecting database: ', error);
