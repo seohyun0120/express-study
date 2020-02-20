@@ -18,20 +18,27 @@
 
 #### 2. API 정의하기 (2/12 ~ 2/13)
 
-Mockup data를 생성해서 API가 제대로 작동하는지 확인하는 단계입니다.
+**Mockup data**를 생성해서 API가 제대로 작동하는지 확인하는 단계입니다.
 
 express app의 port 번호: `8000`
+
 router path: `/api/v1/posts/`
 
-먼저, 정의한 API는 다음과 같습니다.
 
-| request url | HTTP METHOD | description           |
-| ----------- | ----------- | --------------------- |
-| /           | GET         | DB에 있는 전체 글을 조회한다.    |
-| /:id        | GET         | 조회한 id에 해당하는 글을 조회한다. |
-| /           | POST        | 새로운 글을 작성한다.          |
-| /:id        | PATCH       | 조회한 id에 해당하는 글을 수정한다. |
-| /:id        | DELETE      | 조회한 id에 해당하는 글을 삭제한다. |
+
+**정의한 API**는 다음과 같습니다.
+
+`const id = req.params`
+
+`const { author, title, content } = req.body`
+
+| request url | HTTP METHOD | description                         | Reqeust                |
+| ----------- | ----------- | ----------------------------------- | ---------------------- |
+| GET         | /           | DB에 있는 전체 글을 조회한다.       |                        |
+| GET         | /:id        | 조회한 id에 해당하는 글을 조회한다. | id                     |
+| POST        | /           | 새로운 글을 작성한다.               | title, author, content |
+| PATCH       | /:id        | 조회한 id에 해당하는 글을 수정한다. | title, content         |
+| DELETE      | /:id        | 조회한 id에 해당하는 글을 삭제한다. | id                     |
 
 
 
@@ -46,24 +53,32 @@ router path: `/api/v1/posts/`
 }
 ```
 
-`const id = req.params`
-`const { author, title, content } = req.body`
 
-
-| request url  | http status code | ERROR_MESSAGE                           | description                            | ERROR_CODE |
-| ------------ | ---------------- | --------------------------------------- | -------------------------------------- | ---------- |
-| -            | 500              | Internal Server Error                   | DB 자체에 문제가 생기는 경우입니다.                  | 500        |
-| GET /:id     | 404              | postID '${postId}' Not found            | 조회한 id에 해당하는 글이 DB에 없어 조회할 수 없는 경우입니다. | 1          |
-| POST         | 400              | Author and Title cannot be empty string | author와 title이 모두 빈 문자열인 경우입니다.        | 2          |
-| POST         | 400              | Author cannot be empty string           | author가 빈 문자열인 경우입니다.                  | 3          |
-| POST         | 400              | Title cannot be empty string            | title이 빈 문자열인 경우입니다.                   | 4          |
-| PATCH /:id   | 404              | postID '${postId}' Not found            | 조회한 id에 해당하는 글이 DB에 없어 수정할 수 없는 경우입니다. | 1          |
-| PATCH /:id   | 400              | Title cannot be empty string            | title이 빈 문자열인 경우입니다.                   | 4          |
-| DETELTE /:id | 404              | postID '${postId}' Not found            | 조회한 id에 해당하는 글이 DB에 없어 삭제할 수 없는 경우입니다. | 1          |
+| request url  | http status code | ERROR_CODE | ERROR_MESSAGE                           | description                                                  |
+| ------------ | ---------------- | ---------- | --------------------------------------- | ------------------------------------------------------------ |
+| -            | 500              | 500        | Internal Server Error                   | DB 자체에 문제가 생기는 경우입니다.                          |
+| GET /:id     | 404              | 1          | postID '${postId}' Not found            | 조회한 id에 해당하는 글이 DB에 없어 조회할 수 없는 경우입니다. |
+| POST         | 400              | 2          | Author and Title cannot be empty string | author와 title이 모두 빈 문자열인 경우입니다.                |
+| POST         | 400              | 3          | Author cannot be empty string           | author가 빈 문자열인 경우입니다.                             |
+| POST         | 400              | 4          | Title cannot be empty string            | title이 빈 문자열인 경우입니다.                              |
+| PATCH /:id   | 404              | 1          | postID '${postId}' Not found            | 조회한 id에 해당하는 글이 DB에 없어 수정할 수 없는 경우입니다. |
+| PATCH /:id   | 400              | 4          | Title cannot be empty string            | title이 빈 문자열인 경우입니다.                              |
+| DETELTE /:id | 404              | 1          | postID '${postId}' Not found            | 조회한 id에 해당하는 글이 DB에 없어 삭제할 수 없는 경우입니다. |
 
 
 
 #### 3. DB 구축 (2/14 ~ 2/18)
 
-MongoDB를 사용합니다.
+실습용 MongoDB의 주소와 포트번호를 부여받았습니다. **dotenv**를 사용하여 `test`, `dev`, `prod` 세 가지 개발 환경으로 나누어 작업을 진행하고 있습니다. 현재 `MONGO_ADDRESS`는 세 단계 모두 같으며, `DB_NAME`은 **test**와 **post** 2개로 나뉘어있습니다.  test는 테스트 업무에만 사용되는 DB이며, post는 dev와 prod 모두에서 사용되는 DB입니다. (향후 prod용 DB를 만들 예정입니다.)
+
+```
+// .env
+
+MONGO_ADDRESS='___________'
+DB_NAME='____'
+```
+
+
+
+#### 4. Mocha로 test code 작성하기 (2/19 ~ )
 
