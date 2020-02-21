@@ -1,5 +1,4 @@
 import { Request, Response } from 'express';
-import { map, omit } from 'lodash';
 import { ICreatePost, IUpdatePost } from '../../../../src/models/post';
 import PostService from './post.services';
 

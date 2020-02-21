@@ -1,4 +1,4 @@
-import { PostModel, ICreatePost } from '../../../models/post';
+import { PostModel } from '../../../models/post';
 import { isNull, map, omit } from 'lodash';
 
 const getPosts = async (query: object) => {
