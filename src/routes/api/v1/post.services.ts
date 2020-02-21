@@ -3,7 +3,8 @@ import { isNull, map, omit } from 'lodash';
 
 const getPosts = async (query: object) => {
 	const posts = await PostModel.find(query).lean();
-	return posts;
+	const result = map(posts, (p) => omit(p, '__v'));
+	return result;
 }
 
 const getPost = async (id: string) => {

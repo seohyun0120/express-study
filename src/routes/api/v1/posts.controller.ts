@@ -5,10 +5,8 @@ import PostService from './post.services';
 
 const getPosts = async (req: Request, res: Response) => {
 	try {
-		const posts = await PostService.getPosts({});
-		const result = map(posts, (p) => omit(p, '__v'));
-
-		return res.status(200).json({ data: result });
+		const post = await PostService.getPosts({});
+		return res.status(200).json({ data: post });
 	} catch (error) {
 		return res.status(500).json({
 			error: {
@@ -23,9 +21,7 @@ const getPost = async (req: Request, res: Response) => {
 	const { id } = req.params;
 	try {
 		const post = await PostService.getPost(id);
-		return res.status(200).json({
-			data: post
-		});
+		return res.status(200).json({ data: post });
 	} catch ([status, code, err]) {
 		return res.status(status).json({ error: { code, err } });
 	}
@@ -55,7 +51,7 @@ const updatePost = async (req: Request, res: Response) => {
 
 const deletePost = async (req: Request, res: Response) => {
 	const { id } = req.params;
-	
+
 	try {
 		const post = await PostService.deletePost(id);
 		return res.status(200).json({ data: post });
