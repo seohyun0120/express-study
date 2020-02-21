@@ -67,20 +67,7 @@ router path: `/api/v1/posts/`
 
 
 
-#### 3. DB 구축 (2/14 ~ 2/18)
-
-실습용 MongoDB의 주소와 포트번호를 부여받았습니다. **dotenv**를 사용하여 `test`, `dev`, `prod` 세 가지 개발 환경으로 나누어 작업을 진행하고 있습니다. 현재 `MONGO_ADDRESS`는 세 단계 모두 같으며, `DB_NAME`은 **test**와 **post** 2개로 나뉘어있습니다.  test는 테스트 업무에만 사용되는 DB이며, post는 dev와 prod 모두에서 사용되는 DB입니다. (향후 prod용 DB를 만들 예정입니다.)
-
-```
-// .env
-
-MONGO_ADDRESS='___________'
-DB_NAME='____'
-```
-
-
-
-#### 4. dotenv로 환경 변수 설정하기 (2/19)
+#### 3. DB 구축 (2/14, 2/17 ~ 2/18)
 
 실습용 MongoDB의 주소와 포트번호를 부여받았습니다. **dotenv**를 사용하여 `test`, `dev`, `prod` 세 가지 개발 환경으로 나누어 작업을 진행하고 있습니다.
 
@@ -99,7 +86,7 @@ const DATABASE_URL = `mongodb://${process.env.MONGO_ADDRESS}${process.env.DB_NAM
 
 
 
-#### 5. express app 모듈로 나누기 (2/20 ~ 2/21)
+#### 4. express app 모듈로 나누기 (2/19 ~ 2/20)
 
 하나의 파일에 정의되었던 express.js app을 작은 모듈들로 나누어서 독립적으로 실행되게 구조를 바꾸었습니다. mongodb를 먼저 연결한 후, express를 연결할 수 있도록 구성하였습니다.
 
@@ -113,13 +100,8 @@ src
 
 
 
-#### 6. service, controller로 나누기 (2/21)
+#### 5. service, controller로 나누기 (2/21)
 
 **Service**: Client의 요청에 알맞게 MongoDB에서 값을 조회하여, 정해진 형식에 맞춰 값을 반환합니다. (data || error)
 
 **Controller**: service로부터 받은 값(data || error)을 바탕으로 client에게 전달해줍니다.
-
-
-
-
-
