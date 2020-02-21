@@ -1,43 +1,13 @@
+import loaders from './loaders';
 import express, { Application } from 'express';
-import bodyParser from 'body-parser';
-import dotenv from 'dotenv';
-import path from 'path';
-import mongoose from 'mongoose';
-import indexRouter from './routes';
 
-dotenv.config({
-  path: path.resolve(__dirname, `./../config/${process.env.NODE_ENV}.env`)
-});
+async function startServer() {
+	const app: Application = express();
+	await loaders({ expressApp: app });
 
-const MONGO_URI=`${process.env.MONGO_ADDRESS}${process.env.DB_NAME}`;
+	app.listen(8080, () => {
+		console.log('Ready to start SERVER');
+	});
+};
 
-const connectDb = async () => {
-  try {
-    await mongoose.connect(MONGO_URI, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-      useFindAndModify: false,
-    });
-    console.info(`Successfully connected to ${MONGO_URI}`);
-    app.emit('ready');
-  } catch (error) {
-    console.error('Error connecting database: ', error);
-    return process.exit(1);
-  }
-}
-
-const app: Application = express();
-
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use('/', indexRouter);
-
-app.on('ready', () => {
-  app.listen(process.env.PORT, () => {
-    console.log('server started!');
-  });
-});
-
-connectDb();
-
-export default app;
+setImmediate(startServer);
