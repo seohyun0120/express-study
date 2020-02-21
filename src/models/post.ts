@@ -8,6 +8,17 @@ export interface IPost extends Document {
 	updatedAt: Date;
 }
 
+export interface ICreatePost {
+	author: string;
+	title: string;
+	content?: string;
+}
+
+export interface IUpdatePost {
+	title: string;
+	content?: string;
+}
+
 const PostSchema: Schema = new Schema({
 	author: { type: String, required: true },
 	title: { type: String, required: true },
