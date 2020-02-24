@@ -46,12 +46,12 @@ router path: `/api/v1/posts/`
 
 ```
 {
-	"success": true,
-	"data": [
-		{
-			...
-		}
-	]
+  "success": true,
+  "data": [
+    {
+      ...
+    }
+  ]
 }
 ```
 
@@ -59,7 +59,7 @@ router path: `/api/v1/posts/`
 
 ```
 {
-	"success": false,
+  "success": false,
     "error": {
         "code": ERROR_CODE,
         "message": ERROR_MESSAGE
@@ -107,9 +107,9 @@ const DATABASE_URL = `mongodb://${process.env.MONGO_ADDRESS}${process.env.DB_NAM
 ```
 src
 |__ loaders
-	|__ index.ts
-	|__ mongoose.ts
-	|__ express.ts
+  |__ index.ts
+  |__ mongoose.ts
+  |__ express.ts
 ```
 
 

@@ -2,17 +2,17 @@ import loaders from './loaders';
 import express, { Application } from 'express';
 
 async function startServer() {
-	const app: Application = express();
-	await loaders({ expressApp: app });
+  const app: Application = express();
+  await loaders({ expressApp: app });
 
-	app.listen(8080, (err) => {
-		if (err) {
-			console.log(err);
-			return;
-		}
+  app.listen(8080, (err) => {
+    if (err) {
+      console.log(err);
+      return;
+    }
 
-		console.log('Ready to start SERVER');
-	});
+    console.log('Ready to start SERVER');
+  });
 };
 
 setImmediate(startServer);
