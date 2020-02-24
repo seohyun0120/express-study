@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { ICreatePost, IUpdatePost } from '../../../../src/models/post';
 import PostService from './post.services';
+import { isValidObjectId } from 'mongoose';
 
 const getPosts = async (req: Request, res: Response) => {
 	try {
@@ -18,6 +19,10 @@ const getPosts = async (req: Request, res: Response) => {
 
 const getPost = async (req: Request, res: Response) => {
 	const { id } = req.params;
+	if (!isValidObjectId(id)) {
+		return res.status(404).json({ isSucceeded: false, error: { code: 1, message: `postId '${id} is Not Found` } })
+	}
+
 	try {
 		const post = await PostService.getPost(id);
 		return res.status(200).json({ isSucceeded: true, data: post });
@@ -40,6 +45,10 @@ const updatePost = async (req: Request, res: Response) => {
 	const { id } = req.params;
 	const { title, content } = req.body as IUpdatePost;
 
+	if (!isValidObjectId(id)) {
+		return res.status(404).json({ isSucceeded: false, error: { code: 1, message: `postId '${id} is Not Found` } })
+	}
+
 	try {
 		const post = await PostService.updatePost(id, title, content);
 		return res.status(201).json({ isSucceeded: true, data: post });
@@ -50,6 +59,9 @@ const updatePost = async (req: Request, res: Response) => {
 
 const deletePost = async (req: Request, res: Response) => {
 	const { id } = req.params;
+	if (!isValidObjectId(id)) {
+		return res.status(404).json({ isSucceeded: false, error: { code: 1, message: `postId '${id} is Not Found` } })
+	}
 
 	try {
 		const post = await PostService.deletePost(id);
