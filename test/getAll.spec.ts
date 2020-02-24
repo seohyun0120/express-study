@@ -27,6 +27,7 @@ describe('# GET ALL', () => {
 				.end((err, res) => {
 					res.should.have.status(200);
 					res.body.should.be.a('object');
+					res.body.should.have.property('isSucceeded').eql(true);
 					res.body.should.have.property('data').with.lengthOf(1);
 					res.body.data.should.be.a('array');
 					res.body.data[0].should.have.property('author').eql(testData.createTest.author);

@@ -24,6 +24,7 @@ describe('# POST', () => {
 				.end((err, res) => {
 					res.should.have.status(400);
 					res.body.should.be.a('object');
+					res.body.should.have.property('isSucceeded').eql(false);
 					res.body.should.have.property('error');
 					res.body.error.should.have.property('code').eql(2);
 					res.body.error.should.have.property('message').eql('Author and Title cannot be empty string');
@@ -38,6 +39,7 @@ describe('# POST', () => {
 				.end((err, res) => {
 					res.should.have.status(400);
 					res.body.should.be.a('object');
+					res.body.should.have.property('isSucceeded').eql(false);
 					res.body.should.have.property('error');
 					res.body.error.should.have.property('code').eql(3);
 					res.body.error.should.have.property('message').eql('Author cannot be empty string');
@@ -52,6 +54,7 @@ describe('# POST', () => {
 				.end((err, res) => {
 					res.should.have.status(400);
 					res.body.should.be.a('object');
+					res.body.should.have.property('isSucceeded').eql(false);
 					res.body.should.have.property('error');
 					res.body.error.should.have.property('code').eql(4);
 					res.body.error.should.have.property('message').eql('Title cannot be empty string');
@@ -67,6 +70,7 @@ describe('# POST', () => {
 					res.should.have.status(201);
 					res.body.should.be.a('object');
 					res.body.should.have.property('data');
+					res.body.should.have.property('isSucceeded').eql(true);
 					res.body.should.have.property('author').eql(testParams.createTest.author);
 					res.body.should.have.property('title').eql(testParams.createTest.title);
 					res.body.should.have.property('content').eql(testParams.createTest.content);

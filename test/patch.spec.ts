@@ -24,6 +24,22 @@ describe('# PATCH', () => {
 	});
 
 	describe('## /PATCH/:id post', () => {
+		const invalidId = id + 'a';
+		it('should not PATCH a post if id is invalid', (done) => {
+			chai.request(testApp)
+				.patch('/api/v1/posts/' + invalidId)
+				.send(testData.updateTest)
+				.end((err, res) => {
+					res.should.have.status(404);
+					res.body.should.be.a('object');
+					res.body.should.have.property('isSucceeded').eql(false);
+					res.body.should.have.property('error');
+					res.body.error.should.have.property('code').eql(1);
+					res.body.error.should.have.property('message').eql(`postId '${invalidId} is Not Found`);
+					done();
+				});
+		});
+
 		it('should not PATCH a post if title is empty string', (done) => {
 			chai.request(testApp)
 				.patch('/api/v1/posts/' + id)
@@ -31,6 +47,7 @@ describe('# PATCH', () => {
 				.end((err, res) => {
 					res.should.have.status(400);
 					res.body.should.be.a('object');
+					res.body.should.have.property('isSucceeded').eql(false);
 					res.body.should.have.property('error');
 					res.body.error.should.have.property('code').eql(4);
 					res.body.error.should.have.property('message').eql('Title cannot be empty string');
@@ -40,11 +57,12 @@ describe('# PATCH', () => {
 
 		it('should PATCH a post', (done) => {
 			chai.request(testApp)
-			.patch('/api/v1/posts/' + id)
-			.send(testData.updateTest)
+				.patch('/api/v1/posts/' + id)
+				.send(testData.updateTest)
 				.end((err, res) => {
 					res.should.have.status(201);
 					res.body.should.be.a('object');
+					res.body.should.have.property('isSucceeded').eql(true);
 					res.body.should.have.property('data');
 					res.body.data.should.have.property('_id').eql(id);
 					res.body.data.should.have.property('title').eql(testData.updateTest.title);

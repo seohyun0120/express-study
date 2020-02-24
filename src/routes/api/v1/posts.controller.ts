@@ -6,7 +6,7 @@ import { isValidObjectId } from 'mongoose';
 const getPosts = async (req: Request, res: Response) => {
 	try {
 		const post = await PostService.getPosts({});
-		return res.status(200).json({ data: post });
+		return res.status(200).json({ isSucceeded: true, data: post });
 	} catch (error) {
 		return res.status(500).json({
 			error: {
