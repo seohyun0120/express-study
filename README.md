@@ -32,11 +32,11 @@ router path: `/api/v1/posts/`
 
 `const { author, title, content } = req.body`
 
-| HTTP METHOD | request url | description                         | Reqeust                |
-| ----------- | ----------- | ----------------------------------- | ---------------------- |
-| GET         | /           | DB에 있는 전체 글을 조회한다.       |                        |
+| HTTP METHOD | request url | description           | Reqeust                |
+| ----------- | ----------- | --------------------- | ---------------------- |
+| GET         | /           | DB에 있는 전체 글을 조회한다.    |                        |
 | GET         | /:id        | 조회한 id에 해당하는 글을 조회한다. | id                     |
-| POST        | /           | 새로운 글을 작성한다.               | title, author, content |
+| POST        | /           | 새로운 글을 작성한다.          | title, author, content |
 | PATCH       | /:id        | 조회한 id에 해당하는 글을 수정한다. | title, content         |
 | DELETE      | /:id        | 조회한 id에 해당하는 글을 삭제한다. | id                     |
 
@@ -44,7 +44,7 @@ router path: `/api/v1/posts/`
 
 각 요청에 **성공**하는 경우는 다음과 같은 형태로 응답합니다.
 
-```{
+```
 {
 	"success": true,
 	"data": [
@@ -68,15 +68,15 @@ router path: `/api/v1/posts/`
 ```
 
 
-| request URL  | http status code | ERROR_CODE | ERROR_MESSAGE                           | description                                                  |
-| ------------ | ---------------- | ---------- | --------------------------------------- | ------------------------------------------------------------ |
-| -            | 500              | 500        | Internal Server Error                   | DB 자체에 문제가 생기는 경우입니다.                          |
+| request URL  | http status code | ERROR_CODE | ERROR_MESSAGE                           | description                            |
+| ------------ | ---------------- | ---------- | --------------------------------------- | -------------------------------------- |
+| -            | 500              | 500        | Internal Server Error                   | DB 자체에 문제가 생기는 경우입니다.                  |
 | GET /:id     | 404              | 1          | postID '${postId}' Not found            | 조회한 id에 해당하는 글이 DB에 없어 조회할 수 없는 경우입니다. |
-| POST         | 400              | 2          | Author and Title cannot be empty string | author와 title이 모두 빈 문자열인 경우입니다.                |
-| POST         | 400              | 3          | Author cannot be empty string           | author가 빈 문자열인 경우입니다.                             |
-| POST         | 400              | 4          | Title cannot be empty string            | title이 빈 문자열인 경우입니다.                              |
+| POST         | 400              | 2          | Author and Title cannot be empty string | author와 title이 모두 빈 문자열인 경우입니다.        |
+| POST         | 400              | 3          | Author cannot be empty string           | author가 빈 문자열인 경우입니다.                  |
+| POST         | 400              | 4          | Title cannot be empty string            | title이 빈 문자열인 경우입니다.                   |
 | PATCH /:id   | 404              | 1          | postID '${postId}' Not found            | 조회한 id에 해당하는 글이 DB에 없어 수정할 수 없는 경우입니다. |
-| PATCH /:id   | 400              | 4          | Title cannot be empty string            | title이 빈 문자열인 경우입니다.                              |
+| PATCH /:id   | 400              | 4          | Title cannot be empty string            | title이 빈 문자열인 경우입니다.                   |
 | DETELTE /:id | 404              | 1          | postID '${postId}' Not found            | 조회한 id에 해당하는 글이 DB에 없어 삭제할 수 없는 경우입니다. |
 
 
@@ -124,10 +124,10 @@ src
 
 #### 6. Mocha로 Test Code 작성하기 (2/22, 2/24~2/25)
 
-| request URL  | before                               | test                                                         | after   |
-| ------------ | ------------------------------------ | ------------------------------------------------------------ | ------- |
-| GET          | connect db, server && create post    | 생성된 글이 조회되는지 확인한다.                             | db drop |
-| getOne       | connect db, server  && create a post | 생성된 글이 조회되는지 확인한다.                             | db drop |
-| POST         | connect db, server                   | 1. invalid request에 따라 글이 생성되지 않는 것을 확인한다. 2. 글이 생성되는지 확인한다. | db drop |
+| request URL  | before                               | test                                                                                               | after   |
+| ------------ | ------------------------------------ | -------------------------------------------------------------------------------------------------- | ------- |
+| GET          | connect db, server && create post    | 생성된 글이 조회되는지 확인한다.                                                                                 | db drop |
+| getOne       | connect db, server  && create a post | 생성된 글이 조회되는지 확인한다.                                                                                 | db drop |
+| POST         | connect db, server                   | 1. invalid request에 따라 글이 생성되지 않는 것을 확인한다. 2. 글이 생성되는지 확인한다.                                       | db drop |
 | PATCH /:id   | connect db, server && create a post  | 1. invalid Id로 인해 글이 수정되지 않는 것을 확인한다. 2. invalid request에 따라 글이 수정되지 않는 것을 확인한다. 3. 글이 수정되는지 확인한다. | db drop |
-| DETELTE /:id | connect db, server && create a post  | 1. invalid Id로 인해 글이 삭제되지 않는 것을 확인한다. 2. 글이 삭제되는지 확인한다. | db drop |
+| DETELTE /:id | connect db, server && create a post  | 1. invalid Id로 인해 글이 삭제되지 않는 것을 확인한다. 2. 글이 삭제되는지 확인한다.                                            | db drop |
