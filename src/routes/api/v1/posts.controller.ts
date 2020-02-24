@@ -20,9 +20,9 @@ const getPost = async (req: Request, res: Response) => {
 	const { id } = req.params;
 	try {
 		const post = await PostService.getPost(id);
-		return res.status(200).json({ data: post });
-	} catch ([status, code, message]) {
-		return res.status(status).json({ error: { code, message } });
+		return res.status(200).json({ isSucceeded: true, data: post });
+	} catch ([status, isSucceeded, code, message]) {
+		return res.status(status).json({ isSucceeded: false, error: { code, message } });
 	}
 }
 
@@ -30,9 +30,9 @@ const createPost = async (req: Request, res: Response) => {
 	const { author, title, content } = req.body as ICreatePost;
 	try {
 		const post = await PostService.createPost(author, title, content);
-		return res.status(201).json({ data: post });
-	} catch ([status, code, message]) {
-		return res.status(status).json({ error: { code, message } });
+		return res.status(201).json({ isSucceeded: true, data: post });
+	} catch ([status, isSucceeded, code, message]) {
+		return res.status(status).json({ isSucceeded: false, error: { code, message } });
 	}
 }
 
@@ -42,9 +42,9 @@ const updatePost = async (req: Request, res: Response) => {
 
 	try {
 		const post = await PostService.updatePost(id, title, content);
-		return res.status(201).json({ data: post });
-	} catch ([status, code, message]) {
-		return res.status(status).json({ error: { code, message } });
+		return res.status(201).json({ isSucceeded: true, data: post });
+	} catch ([status, isSucceeded, code, message]) {
+		return res.status(status || 500).json({ isSucceeded: false, error: { code, message } });
 	}
 }
 
@@ -53,9 +53,9 @@ const deletePost = async (req: Request, res: Response) => {
 
 	try {
 		const post = await PostService.deletePost(id);
-		return res.status(200).json({ data: post });
-	} catch ([status, code, message]) {
-		return res.status(status).json({ error: { code, message } });
+		return res.status(200).json({ isSucceeded: true, data: post });
+	} catch ([status, isSucceeded, code, message]) {
+		return res.status(status).json({ isSucceeded: false, error: { code, message } });
 	}
 }
 

@@ -1,7 +1,7 @@
 import { PostModel } from '../../../models/post';
 import { isNull, map, omit } from 'lodash';
 
-const getPosts = async (query: object) => {
+const getPosts = async (query: object) => { 
 	const posts = await PostModel.find(query).lean();
 	const result = map(posts, (p) => omit(p, '__v'));
 	return result;
@@ -11,7 +11,7 @@ const getPost = async (id: string) => {
 	const post = await PostModel.findById(id).lean();
 
 	if (isNull(post)) {
-		throw [404, 1, `postId '${id} Not found.`];
+		throw [404, false, 1, `postId '${id} Not found.`];
 	}
 
 	const result = omit(post, '__v');
@@ -24,11 +24,11 @@ const createPost = async (
 	content?: string
 ) => {
 	if (author === '' && title === '') {
-		throw [400, 2, 'Author and Title cannot be empty string'];
+		throw [400, false, 2, 'Author and Title cannot be empty string'];
 	} else if (author === '') {
-		throw [400, 3, 'Author cannot be empty string'];
+		throw [400, false, 3, 'Author cannot be empty string'];
 	} else if (title === '') {
-		throw [400, 4, 'Title cannot be empty string'];
+		throw [400, false, 4, 'Title cannot be empty string'];
 	}
 
 	const post = await new PostModel({
@@ -46,9 +46,9 @@ const updatePost = async (id: string, title: string, content?: string) => {
 	}, { new: true });
 
 	if (isNull(post)) {
-		throw [404, 1, `postId '${id} Not found.`];
+		throw [404, false, 1, `postId '${id} Not found.`];
 	} else if (title === '') {
-		throw [400, 4, 'Title cannot be empty string'];
+		throw [400, false, 4, 'Title cannot be empty string'];
 	}
 
 	const result = omit(post, '__v');
@@ -59,7 +59,7 @@ const deletePost = async (id: string) => {
 	const post = await PostModel.findByIdAndDelete(id);
 
 	if (isNull(post)) {
-		throw [404, 1, `postId '${id} Not found.`];
+		throw [404, false, 1, `postId '${id} Not found.`];
 	}
 
 	return post;

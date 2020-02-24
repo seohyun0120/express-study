@@ -5,7 +5,12 @@ async function startServer() {
 	const app: Application = express();
 	await loaders({ expressApp: app });
 
-	app.listen(8080, () => {
+	app.listen(8080, (err) => {
+		if (err) {
+			console.log(err);
+			return;
+		}
+
 		console.log('Ready to start SERVER');
 	});
 };
