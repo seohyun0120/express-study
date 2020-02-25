@@ -1,20 +1,21 @@
-import { PostModel } from '../../../models/post';
 import { isNull, map, omit } from 'lodash';
+import { PostModel } from '../../../models/post';
+import { IPostMongooseResult, IPostResult, IPost } from '../../../../src/Interfaces/IPost';
 
-const getPosts = async (query: object) => { 
-  const posts = await PostModel.find(query).lean();
-  const result = map(posts, (p) => omit(p, '__v'));
+const getPosts = async (query: object) => {
+  const posts: IPostMongooseResult[] = await PostModel.find(query).lean();
+  const result: IPostResult[] = map(posts, (p) => omit(p, '__v'));
   return result;
 }
 
 const getPost = async (id: string) => {
-  const post = await PostModel.findById(id).lean();
+  const post: IPostMongooseResult = await PostModel.findById(id).lean();
 
   if (isNull(post)) {
     throw [404, false, 1, `postId '${id} Not found.`];
   }
 
-  const result = omit(post, '__v');
+  const result: IPostResult = omit(post, '__v');
   return result;
 }
 
@@ -31,16 +32,13 @@ const createPost = async (
     throw [400, false, 4, 'Title cannot be empty string'];
   }
 
-  const post = await new PostModel({
-    title, author, content
-  }).save();
-
-  const result = omit(post.toObject(), '__v');
+  const post: IPost = await PostModel.create({ title, author, content });
+  const result: IPostResult = post.toObject({ versionKey: false });
   return result;
 }
 
 const updatePost = async (id: string, title: string, content?: string) => {
-  const post = await PostModel.findByIdAndUpdate(id, {
+  const post: IPost = await PostModel.findByIdAndUpdate(id, {
     title,
     content
   }, { new: true });
@@ -51,18 +49,19 @@ const updatePost = async (id: string, title: string, content?: string) => {
     throw [400, false, 4, 'Title cannot be empty string'];
   }
 
-  const result = omit(post, '__v');
+  const result: IPostResult = post.toObject({ versionKey: false });
   return result;
 }
 
 const deletePost = async (id: string) => {
-  const post = await PostModel.findByIdAndDelete(id);
+  const post: IPost = await PostModel.findByIdAndDelete(id);
 
   if (isNull(post)) {
     throw [404, false, 1, `postId '${id} Not found.`];
   }
 
-  return post;
+  const result: IPostResult = post.toObject({ versionKey: false });
+  return result;
 }
 
 export default { getPosts, getPost, createPost, updatePost, deletePost };

@@ -1,23 +1,5 @@
-import mongoose, { Schema, Document } from 'mongoose';
-
-export interface IPost extends Document {
-  author: string;
-  title: string;
-  content: string;
-  createdAt: Date;
-  updatedAt: Date;
-}
-
-export interface ICreatePost {
-  author: string;
-  title: string;
-  content?: string;
-}
-
-export interface IUpdatePost {
-  title: string;
-  content?: string;
-}
+import mongoose, { Schema } from 'mongoose';
+import { IPost } from '../interfaces/IPost';
 
 const PostSchema: Schema = new Schema({
   author: { type: String, required: true },
