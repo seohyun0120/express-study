@@ -3,7 +3,7 @@ import express, { Application } from 'express';
 
 async function startServer() {
   const app: Application = express();
-  await loaders({ expressApp: app });
+  await loaders(app);
 
   app.listen(8080, (err) => {
     if (err) {
