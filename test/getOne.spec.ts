@@ -14,7 +14,7 @@ let id: string = '';
 describe('# CREATE', () => {
   before('connect database & server', async () => {
     await mongooseLoader();
-    await expressLoader({ app: testApp });
+    await expressLoader(testApp);
   });
 
   before('create a post', async () => {
@@ -25,8 +25,8 @@ describe('# CREATE', () => {
 
   describe('## /GET/:id post', () => {
     const invalidId = id + 'a';
-    it('should not GET a post if id is invalid', (done) => {
-      chai.request(testApp)
+    it('should not GET a post if id is invalid', async () => {
+      await chai.request(testApp)
         .get('/api/v1/posts/' + invalidId)
         .end((err, res) => {
           res.should.have.status(404);
@@ -35,12 +35,11 @@ describe('# CREATE', () => {
           res.body.should.have.property('error');
           res.body.error.should.have.property('code').eql(1);
           res.body.error.should.have.property('message').eql(`postId '${invalidId} is Not Found`);
-          done();
         });
     });
 
-    it('should GET a post by the given id', (done) => {
-      chai.request(testApp)
+    it('should GET a post by the given id', async () => {
+      await chai.request(testApp)
         .get('/api/v1/posts/' + id)
         .end((err, res) => {
           res.should.have.status(200);
@@ -51,7 +50,6 @@ describe('# CREATE', () => {
           res.body.data.should.have.property('title').eql(testParams.createTest.title);
           res.body.data.should.have.property('content').eql(testParams.createTest.content);
           res.body.data._id.should.eql(id);
-          done();
         });
     });
   });

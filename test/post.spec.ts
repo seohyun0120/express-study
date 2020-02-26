@@ -13,12 +13,12 @@ const testApp: Application = express();
 describe('# POST', () => {
   before('connect database & server', async () => {
     await mongooseLoader();
-    await expressLoader({ app: testApp });
+    await expressLoader(testApp);
   });
 
   describe('## /POST/:id post', () => {
-    it('should not POST a post if title and author are empty string', (done) => {
-      chai.request(testApp)
+    it('should not POST a post if title and author are empty string', async () => {
+      await chai.request(testApp)
         .post('/api/v1/posts')
         .send(testParams.code2Test)
         .end((err, res) => {
@@ -28,12 +28,11 @@ describe('# POST', () => {
           res.body.should.have.property('error');
           res.body.error.should.have.property('code').eql(2);
           res.body.error.should.have.property('message').eql('Author and Title cannot be empty string');
-          done();
         });
     });
 
-    it('should not POST a post if author is empty string', (done) => {
-      chai.request(testApp)
+    it('should not POST a post if author is empty string', async () => {
+      await chai.request(testApp)
         .post('/api/v1/posts')
         .send(testParams.code3Test)
         .end((err, res) => {
@@ -43,12 +42,11 @@ describe('# POST', () => {
           res.body.should.have.property('error');
           res.body.error.should.have.property('code').eql(3);
           res.body.error.should.have.property('message').eql('Author cannot be empty string');
-          done();
         });
     });
 
-    it('should not POST a post if title is empty string', (done) => {
-      chai.request(testApp)
+    it('should not POST a post if title is empty string', async () => {
+      await chai.request(testApp)
         .post('/api/v1/posts')
         .send(testParams.code4Test)
         .end((err, res) => {
@@ -58,12 +56,11 @@ describe('# POST', () => {
           res.body.should.have.property('error');
           res.body.error.should.have.property('code').eql(4);
           res.body.error.should.have.property('message').eql('Title cannot be empty string');
-          done();
         });
     });
 
     it('should CREATE a post', async () => {
-      chai.request(testApp)
+      await chai.request(testApp)
         .post('/api/v1/posts')
         .send(testParams.createTest)
         .end((err, res) => {
@@ -74,11 +71,11 @@ describe('# POST', () => {
           res.body.should.have.property('author').eql(testParams.createTest.author);
           res.body.should.have.property('title').eql(testParams.createTest.title);
           res.body.should.have.property('content').eql(testParams.createTest.content);
-        })
+        });
     });
   });
 
   after('drop database', async () => {
     await (await mongooseLoader()).dropDatabase();
-  })
+  });
 })

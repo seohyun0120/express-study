@@ -13,7 +13,7 @@ const testApp: Application = express();
 describe('# GET ALL', () => {
   before('connect database & server', async () => {
     await mongooseLoader();
-    await expressLoader({ app: testApp });
+    await expressLoader(testApp);
   });
 
   before('create a post', async () => {
@@ -21,8 +21,8 @@ describe('# GET ALL', () => {
   });
 
   describe('## /GET post', () => {
-    it('should GET one post', (done) => {
-      chai.request(testApp)
+    it('should GET one post', async () => {
+      await chai.request(testApp)
         .get('/api/v1/posts/')
         .end((err, res) => {
           res.should.have.status(200);
@@ -33,7 +33,6 @@ describe('# GET ALL', () => {
           res.body.data[0].should.have.property('author').eql(testData.createTest.author);
           res.body.data[0].should.have.property('title').eql(testData.createTest.title);
           res.body.data[0].should.have.property('content').eql(testData.createTest.content);
-          done();
         });
     });
   });

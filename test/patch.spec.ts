@@ -15,7 +15,7 @@ let id: string = '';
 describe('# PATCH', () => {
   before('connect database & server', async () => {
     await mongooseLoader();
-    await expressLoader({ app: testApp });
+    await expressLoader(testApp);
   });
 
   before('create a post', async () => {
@@ -25,8 +25,8 @@ describe('# PATCH', () => {
 
   describe('## /PATCH/:id post', () => {
     const invalidId = id + 'a';
-    it('should not PATCH a post if id is invalid', (done) => {
-      chai.request(testApp)
+    it('should not PATCH a post if id is invalid', async () => {
+      await chai.request(testApp)
         .patch('/api/v1/posts/' + invalidId)
         .send(testData.updateTest)
         .end((err, res) => {
@@ -36,12 +36,11 @@ describe('# PATCH', () => {
           res.body.should.have.property('error');
           res.body.error.should.have.property('code').eql(1);
           res.body.error.should.have.property('message').eql(`postId '${invalidId} is Not Found`);
-          done();
         });
     });
 
-    it('should not PATCH a post if title is empty string', (done) => {
-      chai.request(testApp)
+    it('should not PATCH a post if title is empty string', async () => {
+      await chai.request(testApp)
         .patch('/api/v1/posts/' + id)
         .send(testData.code4Test)
         .end((err, res) => {
@@ -51,12 +50,11 @@ describe('# PATCH', () => {
           res.body.should.have.property('error');
           res.body.error.should.have.property('code').eql(4);
           res.body.error.should.have.property('message').eql('Title cannot be empty string');
-          done();
         });
     });
 
-    it('should PATCH a post', (done) => {
-      chai.request(testApp)
+    it('should PATCH a post', async () => {
+      await chai.request(testApp)
         .patch('/api/v1/posts/' + id)
         .send(testData.updateTest)
         .end((err, res) => {
@@ -67,7 +65,6 @@ describe('# PATCH', () => {
           res.body.data.should.have.property('_id').eql(id);
           res.body.data.should.have.property('title').eql(testData.updateTest.title);
           res.body.data.should.have.property('content').eql(testData.updateTest.content);
-          done();
         });
     });
   });
