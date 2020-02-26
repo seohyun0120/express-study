@@ -30,9 +30,9 @@ describe('# GET ALL', () => {
           res.body.should.have.property('isSucceeded').eql(true);
           res.body.should.have.property('data').with.lengthOf(1);
           res.body.data.should.be.a('array');
-          res.body.data[0].should.have.property('author').eql(testData.createTest.author);
-          res.body.data[0].should.have.property('title').eql(testData.createTest.title);
-          res.body.data[0].should.have.property('content').eql(testData.createTest.content);
+          res.body.data[0].should.have.property('author');
+          res.body.data[0].should.have.property('title');
+          res.body.data[0].should.have.property('content');
         });
     });
   });
