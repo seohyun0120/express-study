@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 import { Db } from 'mongodb';
-import config from '../utils';
+import config from '../utils/config';
 
 const DATABASE_URL = `mongodb://${config.MONGO_ADDRESS}${config.DB_NAME}`;
 

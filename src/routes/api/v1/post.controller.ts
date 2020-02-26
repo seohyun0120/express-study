@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { ICreatePost, IUpdatePost } from '../../../../src/interfaces/IPost';
+import { ICreatePost, IUpdatePost } from '../../../interfaces/IPost';
 import PostService from './post.services';
 import { isValidObjectId } from 'mongoose';
 

@@ -1,6 +1,6 @@
 import { isNull, map, omit } from 'lodash';
 import { PostModel } from '../../../models/post';
-import { IPostMongooseResult, IPostResult, IPost } from '../../../../src/Interfaces/IPost';
+import { IPostMongooseResult, IPostResult, IPost } from '../../../Interfaces/IPost';
 
 const getPosts = async (query: object) => {
   const posts: IPostMongooseResult[] = await PostModel.find(query).lean();
