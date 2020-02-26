@@ -46,28 +46,28 @@ describe('# PATCH', () => {
       res.body.error.should.have.property('code').eql(4);
       res.body.error.should.have.property('message');
     });
-  });
 
-  it('should PATCH a post', async () => {
-    const res = await chai.request(testApp).patch('/api/v1/posts/' + id).send(testData.updateTest);
-    res.should.have.status(201);
-    res.body.should.be.a('object');
-    res.body.should.have.property('isSucceeded').eql(true);
-    res.body.should.have.property('data');
-    res.body.data.should.have.property('_id').eql(id);
-    res.body.data.should.have.property('title');
-    res.body.data.should.have.property('content');
-  });
+    it('should PATCH a post', async () => {
+      const res = await chai.request(testApp).patch('/api/v1/posts/' + id).send(testData.updateTest);
+      res.should.have.status(201);
+      res.body.should.be.a('object');
+      res.body.should.have.property('isSucceeded').eql(true);
+      res.body.should.have.property('data');
+      res.body.data.should.have.property('_id').eql(id);
+      res.body.data.should.have.property('title');
+      res.body.data.should.have.property('content');
+    });
 
-  it('should check if POST has been PATCHed', async () => {
-    const res = await chai.request(testApp).get('/api/v1/posts/' + id);
-    res.should.have.status(200);
-    res.body.should.be.a('object');
-    res.body.should.have.property('isSucceeded').eql(true);
-    res.body.should.have.property('data');
-    res.body.data.should.have.property('_id').eql(id);
-    res.body.data.should.have.property('title').eql(testParams.updateTest.title);
-    res.body.data.should.have.property('content').eql(testParams.updateTest.content);
+    it('should check if POST has been PATCHed', async () => {
+      const res = await chai.request(testApp).get('/api/v1/posts/' + id);
+      res.should.have.status(200);
+      res.body.should.be.a('object');
+      res.body.should.have.property('isSucceeded').eql(true);
+      res.body.should.have.property('data');
+      res.body.data.should.have.property('_id').eql(id);
+      res.body.data.should.have.property('title').eql(testParams.updateTest.title);
+      res.body.data.should.have.property('content').eql(testParams.updateTest.content);
+    });
   });
 
   after('drop database', async () => {

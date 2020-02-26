@@ -48,7 +48,7 @@ describe('# DELETE', () => {
     });
 
     it('should GET 404 after DELETE a post', async () => {
-      const res = await chai.request(testApp).delete('/api/v1/posts/' + invalidId);
+      const res = await chai.request(testApp).delete('/api/v1/posts/' + id);
       res.should.have.status(404);
       res.body.should.be.a('object');
       res.body.should.have.property('isSucceeded').eql(false);
