@@ -19,14 +19,18 @@ describe('# CREATE', () => {
     await expressLoader(testApp);
   });
 
-  before('create a post', async () => {
-    const result = await chai.request(testApp).post('/api/v1/posts').send(testParams.createTest);
-    id = result.body.data._id;
+  after('drop database', async () => {
+    await mongoose.dropDatabase();
   });
 
   describe('## /GET/:id post', () => {
-    const invalidId = id + 'a';
+    before('create a post', async () => {
+      const result = await chai.request(testApp).post('/api/v1/posts').send(testParams.createTest);
+      id = result.body.data._id;
+    });
+
     it('should not GET a post if id is invalid', async () => {
+      const invalidId = id + 'a';
       const res = await chai.request(testApp).get('/api/v1/posts/' + invalidId);
       res.should.have.status(404);
       res.body.should.be.a('object');
@@ -47,9 +51,5 @@ describe('# CREATE', () => {
       res.body.data.should.have.property('title');
       res.body.data.should.have.property('content');
     });
-  });
-
-  after('drop database', async () => {
-    await mongoose.dropDatabase();
   });
 });

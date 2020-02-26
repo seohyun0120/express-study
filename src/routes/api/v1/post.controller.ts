@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
+import { isValidObjectId } from 'mongoose';
 import { ICreatePost, IUpdatePost } from '../../../interfaces/IPost';
 import PostService from './post.service';
-import { isValidObjectId } from 'mongoose';
 
 const getPosts = async (req: Request, res: Response) => {
   try {

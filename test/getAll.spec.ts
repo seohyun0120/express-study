@@ -22,6 +22,10 @@ describe('# GET ALL', () => {
     await chai.request(testApp).post('/api/v1/posts').send(testData.createTest);
   });
 
+  after('drop database', async () => {
+    await mongoose.dropDatabase();
+  });
+
   describe('## /GET post', () => {
     it('should GET one post', async () => {
       const res = await chai.request(testApp).get('/api/v1/posts/');
@@ -34,9 +38,5 @@ describe('# GET ALL', () => {
       res.body.data[0].should.have.property('title');
       res.body.data[0].should.have.property('content');
     });
-  });
-
-  after('drop database', async () => {
-    await mongoose.dropDatabase();
   });
 });

@@ -18,6 +18,10 @@ describe('# POST', () => {
     await expressLoader(testApp);
   });
 
+  after('drop database', async () => {
+    await mongoose.dropDatabase();
+  });
+
   describe('## /POST/:id post', () => {
     it('should not POST a post if title and author are empty string', async () => {
       const res = await chai.request(testApp).post('/api/v1/posts').send(testParams.code2Test);
@@ -49,8 +53,9 @@ describe('# POST', () => {
       res.body.error.should.have.property('message');
     });
 
-    it('should CREATE a post', async () => {
+    it('should CREATE a post && check if record is CREATEd', async () => {
       const res = await chai.request(testApp).post('/api/v1/posts').send(testParams.createTest);
+      const id = res.body.data._id;
       res.should.have.status(201);
       res.body.should.be.a('object');
       res.body.should.have.property('data');
@@ -58,10 +63,15 @@ describe('# POST', () => {
       res.body.data.should.have.property('author');
       res.body.data.should.have.property('title');
       res.body.data.should.have.property('content');
-    });
-  });
 
-  after('drop database', async () => {
-    await mongoose.dropDatabase();
+      const res2 = await chai.request(testApp).get('/api/v1/posts/' + id);
+      res2.should.have.status(200);
+      res2.body.should.be.a('object');
+      res2.body.should.have.property('isSucceeded').eql(true);
+      res2.body.should.have.property('data');
+      res2.body.data.should.have.property('_id').eql(id);
+      res2.body.data.should.have.property('title');
+      res2.body.data.should.have.property('content');
+    });
   });
 });

@@ -20,12 +20,17 @@ describe('# PATCH', () => {
     await expressLoader(testApp);
   });
 
-  before('create a post', async () => {
-    const result = await chai.request(testApp).post('/api/v1/posts').send(testParams.createTest);
-    id = result.body.data._id;
+  after('drop database', async () => {
+    await mongoose.dropDatabase();
   });
 
   describe('## /PATCH/:id post', () => {
+    beforeEach('initialize DB && create a post', async () => {
+      await mongoose.dropDatabase();
+      const result = await chai.request(testApp).post('/api/v1/posts').send(testParams.createTest);
+      id = result.body.data._id;
+    });
+
     const invalidId = id + 'a';
     it('should not PATCH a post if id is invalid', async () => {
       const res = await chai.request(testApp).patch('/api/v1/posts/' + invalidId).send(testData.updateTest);
@@ -47,7 +52,7 @@ describe('# PATCH', () => {
       res.body.error.should.have.property('message');
     });
 
-    it('should PATCH a post', async () => {
+    it('should PATCH a post && check if record is PATCHed', async () => {
       const res = await chai.request(testApp).patch('/api/v1/posts/' + id).send(testData.updateTest);
       res.should.have.status(201);
       res.body.should.be.a('object');
@@ -56,21 +61,15 @@ describe('# PATCH', () => {
       res.body.data.should.have.property('_id').eql(id);
       res.body.data.should.have.property('title');
       res.body.data.should.have.property('content');
-    });
 
-    it('should check if POST has been PATCHed', async () => {
-      const res = await chai.request(testApp).get('/api/v1/posts/' + id);
-      res.should.have.status(200);
-      res.body.should.be.a('object');
-      res.body.should.have.property('isSucceeded').eql(true);
-      res.body.should.have.property('data');
-      res.body.data.should.have.property('_id').eql(id);
-      res.body.data.should.have.property('title').eql(testParams.updateTest.title);
-      res.body.data.should.have.property('content').eql(testParams.updateTest.content);
+      const res2 = await chai.request(testApp).get('/api/v1/posts/' + id);
+      res2.should.have.status(200);
+      res2.body.should.be.a('object');
+      res2.body.should.have.property('isSucceeded').eql(true);
+      res2.body.should.have.property('data');
+      res2.body.data.should.have.property('_id').eql(id);
+      res2.body.data.should.have.property('title').eql(testParams.updateTest.title);
+      res2.body.data.should.have.property('content').eql(testParams.updateTest.content);
     });
-  });
-
-  after('drop database', async () => {
-    await mongoose.dropDatabase();
   });
 });
