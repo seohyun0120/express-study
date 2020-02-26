@@ -1,4 +1,4 @@
-import { ICreatePost, IUpdatePost } from "../src/models/post";
+import { ICreatePost, IUpdatePost } from "../src/interfaces/IPost";
 
 const createTest: ICreatePost = {
   author: 'tester',
