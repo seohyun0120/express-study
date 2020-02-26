@@ -32,8 +32,8 @@ describe('# DELETE', () => {
           res.body.should.be.a('object');
           res.body.should.have.property('isSucceeded').eql(false);
           res.body.should.have.property('error');
-          res.body.error.should.have.property('code').eql(1);
-          res.body.error.should.have.property('message').eql(`postId '${invalidId}' is Not Found`);
+          res.body.error.should.have.property('code');
+          res.body.error.should.have.property('message');
         });
     });
 
@@ -44,11 +44,24 @@ describe('# DELETE', () => {
           res.should.have.status(200);
           res.body.should.have.property('data');
           res.body.should.have.property('isSucceeded').eql(true);
-          res.body.data.should.have.property('_id').eql(id);
-          res.body.data.should.have.property('author').eql(testParams.createTest.author);
-          res.body.data.should.have.property('title').eql(testParams.createTest.title);
-          res.body.data.should.have.property('content').eql(testParams.createTest.content);
+          res.body.data.should.have.property('_id');
+          res.body.data.should.have.property('author');
+          res.body.data.should.have.property('title');
+          res.body.data.should.have.property('content');
         });
+    });
+
+    it('should GET 404 after DELETE a post', async () => {
+      await chai.request(testApp)
+      .delete('/api/v1/posts/' + invalidId)
+      .end((err, res) => {
+        res.should.have.status(404);
+        res.body.should.be.a('object');
+        res.body.should.have.property('isSucceeded').eql(false);
+        res.body.should.have.property('error');
+        res.body.error.should.have.property('code');
+        res.body.error.should.have.property('message');
+      });
     });
   });
 
