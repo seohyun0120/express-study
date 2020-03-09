@@ -3,13 +3,13 @@ import { IPostMongooseResult, IPostResult, IPost } from '../../../Interfaces/IPo
 import { PostModel } from '../../../models/post';
 import Exceptions from '../../../exceptions';
 
-const getPosts = async function (query: object) {
+const getPosts = async (query: object) => {
   const posts: IPostMongooseResult[] = await PostModel.find(query).lean();
   const result: IPostResult[] = map(posts, (p) => omit(p, '__v'));
   return result;
 }
 
-const getPost = async function (id: string) {
+const getPost = async (id: string) => {
   const post: IPostMongooseResult = await PostModel.findById(id).lean();
 
   if (isNull(post)) {
@@ -20,11 +20,11 @@ const getPost = async function (id: string) {
   return result;
 }
 
-const createPost = async function (
+const createPost = async (
   author: string,
   title: string,
   content?: string
-) {
+) => {
   if (author === '' && title === '') {
     throw new Exceptions.AuthorTitleAreEmptyException();
   } else if (author === '') {
@@ -38,7 +38,7 @@ const createPost = async function (
   return result;
 }
 
-const updatePost = async function (id: string, title: string, content?: string) {
+const updatePost = async (id: string, title: string, content?: string) => {
   const post: IPost = await PostModel.findByIdAndUpdate(id, {
     title,
     content
@@ -54,7 +54,7 @@ const updatePost = async function (id: string, title: string, content?: string) 
   return result;
 }
 
-const deletePost = async function (id: string) {
+const deletePost = async (id: string) => {
   const post: IPost = await PostModel.findByIdAndDelete(id);
 
   if (isNull(post)) {

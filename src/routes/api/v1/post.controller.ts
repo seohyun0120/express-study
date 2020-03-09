@@ -4,7 +4,7 @@ import { ICreatePost, IUpdatePost } from '../../../interfaces/IPost';
 import PostService from './post.service';
 import PostNotFoundException from '../../../exceptions/PostNotFoundException';
 
-const getPosts = async function (req: Request, res: Response, next: NextFunction) {
+const getPosts = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const posts = await PostService.getPosts({});
     return res.status(200).json({ isSucceeded: true, data: posts });
@@ -13,7 +13,7 @@ const getPosts = async function (req: Request, res: Response, next: NextFunction
   }
 }
 
-const getPost = async function (req: Request, res: Response, next: NextFunction) {
+const getPost = async (req: Request, res: Response, next: NextFunction) => {
   const { id } = req.params;
   if (!isValidObjectId(id)) {
     return next(new PostNotFoundException(id));
@@ -27,7 +27,7 @@ const getPost = async function (req: Request, res: Response, next: NextFunction)
   }
 }
 
-const createPost = async function (req: Request, res: Response, next: NextFunction) {
+const createPost = async (req: Request, res: Response, next: NextFunction) => {
   const { author, title, content } = req.body as ICreatePost;
   try {
     const post = await PostService.createPost(author, title, content);
@@ -37,7 +37,7 @@ const createPost = async function (req: Request, res: Response, next: NextFuncti
   }
 }
 
-const updatePost = async function (req: Request, res: Response, next: NextFunction) {
+const updatePost = async (req: Request, res: Response, next: NextFunction) => {
   const { id } = req.params;
   const { title, content } = req.body as IUpdatePost;
 
@@ -53,7 +53,7 @@ const updatePost = async function (req: Request, res: Response, next: NextFuncti
   }
 }
 
-const deletePost = async function (req: Request, res: Response, next: NextFunction) {
+const deletePost = async (req: Request, res: Response, next: NextFunction) => {
   const { id } = req.params;
   if (!isValidObjectId(id)) {
     return next(new PostNotFoundException(id));

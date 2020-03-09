@@ -15,24 +15,24 @@ let id: string = '';
 let mongoose: Db;
 
 describe('# PATCH', function () {
-  before('connect database & server', async function () {
+  before('connect database & server', async () => {
     mongoose = await mongooseLoader();
     await expressLoader(testApp);
   });
 
-  after('drop database', async function () {
+  after('drop database', async () => {
     await mongoose.dropDatabase();
   });
 
   describe('## /PATCH/:id post', function () {
-    beforeEach('initialize DB && create a post', async function () {
+    beforeEach('initialize DB && create a post', async () => {
       await mongoose.dropDatabase();
       const result = await chai.request(testApp).post('/api/v1/posts').send(testParams.createTest);
       id = result.body.data._id;
     });
 
     const invalidId = id + 'a';
-    it('should not PATCH a post if id is invalid', async function () {
+    it('should not PATCH a post if id is invalid', async () => {
       const res = await chai.request(testApp).patch('/api/v1/posts/' + invalidId).send(testData.updateTest);
       res.should.have.status(404);
       res.body.should.be.a('object');
@@ -42,7 +42,7 @@ describe('# PATCH', function () {
       res.body.error.should.have.property('message');
     });
 
-    it('should not PATCH a post if title is empty string', async function () {
+    it('should not PATCH a post if title is empty string', async () => {
       const res = await chai.request(testApp).patch('/api/v1/posts/' + id).send(testData.code4Test);
       res.should.have.status(400);
       res.body.should.be.a('object');
@@ -52,7 +52,7 @@ describe('# PATCH', function () {
       res.body.error.should.have.property('message');
     });
 
-    it('should PATCH a post && check if record is PATCHed', async function () {
+    it('should PATCH a post && check if record is PATCHed', async () => {
       const res = await chai.request(testApp).patch('/api/v1/posts/' + id).send(testData.updateTest);
       res.should.have.status(201);
       res.body.should.be.a('object');

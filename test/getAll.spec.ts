@@ -13,21 +13,21 @@ const testApp: Application = express();
 let mongoose: Db;
 
 describe('# GET ALL', function () {
-  before('connect database & server', async function () {
+  before('connect database & server', async () => {
     mongoose = await mongooseLoader();
     await expressLoader(testApp);
   });
 
-  before('create a post', async function () {
+  before('create a post', async () => {
     await chai.request(testApp).post('/api/v1/posts').send(testData.createTest);
   });
 
-  after('drop database', async function () {
+  after('drop database', async () => {
     await mongoose.dropDatabase();
   });
 
   describe('## /GET post', function () {
-    it('should GET one post', async function () {
+    it('should GET one post', async () => {
       const res = await chai.request(testApp).get('/api/v1/posts/');
       res.should.have.status(200);
       res.body.should.be.a('object');
