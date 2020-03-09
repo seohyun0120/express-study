@@ -1,13 +1,24 @@
 import { NextFunction, Request, Response } from 'express';
 import HttpException from './exceptions/HttpException';
 
-function errorHandleMiddleware(err: HttpException, req: Request, res: Response, next: NextFunction) {
-  const status = err.status || 500;
-  const isSucceeded = err.isSucceeded || false;
-  const message = err.message || 'Internal Server Error';
-  const code = err.code || 500;
+function errorHandleMiddleware(err: Error, req: Request, res: Response, next: NextFunction) {
+  if (err instanceof HttpException) {
+    return res.status(err.status).json({
+      isSucceeded: false,
+      error: {
+        code: err.code,
+        message: err.message
+      }
+    });
+  };
 
-  res.status(status).json({ isSucceeded, error: { code, message } });
+  return res.status(500).json({
+    isSucceeded: false,
+    error: {
+      code: 500,
+      message: 'Internal Server Error'
+    }
+  });
 };
 
 export default errorHandleMiddleware;
