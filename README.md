@@ -131,3 +131,9 @@ src
 | POST         | connect db, server                   | 1. invalid request에 따라 글이 생성되지 않는 것을 확인한다. 2. 글이 생성되는지 확인한다.                                       | db drop |
 | PATCH /:id   | connect db, server && create a post  | 1. invalid Id로 인해 글이 수정되지 않는 것을 확인한다. 2. invalid request에 따라 글이 수정되지 않는 것을 확인한다. 3. 글이 수정되는지 확인한다. | db drop |
 | DETELTE /:id | connect db, server && create a post  | 1. invalid Id로 인해 글이 삭제되지 않는 것을 확인한다. 2. 글이 삭제되는지 확인한다.                                            | db drop |
+
+
+
+#### 7. Error Handler Middleware (3/9)
+
+기본 error handler를 정의합니다. **next()**로 오류를 전달하지만, error handler에서 해당 오류를 처리하지 않을 경우, 기본 error handler가 해당 오류를 처리합니다. **(500, Internal Server Error)** 

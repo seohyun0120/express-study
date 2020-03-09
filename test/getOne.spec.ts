@@ -13,7 +13,7 @@ const testApp: Application = express();
 let id: string = '';
 let mongoose: Db;
 
-describe('# CREATE', () => {
+describe('# CREATE', function () {
   before('connect database & server', async () => {
     mongoose = await mongooseLoader();
     await expressLoader(testApp);
@@ -23,7 +23,7 @@ describe('# CREATE', () => {
     await mongoose.dropDatabase();
   });
 
-  describe('## /GET/:id post', () => {
+  describe('## /GET/:id post', function () {
     before('create a post', async () => {
       const result = await chai.request(testApp).post('/api/v1/posts').send(testParams.createTest);
       id = result.body.data._id;

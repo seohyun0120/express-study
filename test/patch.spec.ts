@@ -14,7 +14,7 @@ const testApp: Application = express();
 let id: string = '';
 let mongoose: Db;
 
-describe('# PATCH', () => {
+describe('# PATCH', function () {
   before('connect database & server', async () => {
     mongoose = await mongooseLoader();
     await expressLoader(testApp);
@@ -24,7 +24,7 @@ describe('# PATCH', () => {
     await mongoose.dropDatabase();
   });
 
-  describe('## /PATCH/:id post', () => {
+  describe('## /PATCH/:id post', function () {
     beforeEach('initialize DB && create a post', async () => {
       await mongoose.dropDatabase();
       const result = await chai.request(testApp).post('/api/v1/posts').send(testParams.createTest);

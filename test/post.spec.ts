@@ -12,7 +12,7 @@ chai.should();
 const testApp: Application = express();
 let mongoose: Db;
 
-describe('# POST', () => {
+describe('# POST', function () {
   before('connect database & server', async () => {
     mongoose = await mongooseLoader();
     await expressLoader(testApp);
@@ -22,7 +22,7 @@ describe('# POST', () => {
     await mongoose.dropDatabase();
   });
 
-  describe('## /POST/:id post', () => {
+  describe('## /POST/:id post', function () {
     it('should not POST a post if title and author are empty string', async () => {
       const res = await chai.request(testApp).post('/api/v1/posts').send(testParams.code2Test);
       res.should.have.status(400);

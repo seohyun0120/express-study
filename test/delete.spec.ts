@@ -13,7 +13,7 @@ const testApp: Application = express();
 let id: string = '';
 let mongoose: Db;
 
-describe('# DELETE', () => {
+describe('# DELETE', function () {
   before('connect database & server', async () => {
     mongoose = await mongooseLoader();
     await expressLoader(testApp);
@@ -31,7 +31,7 @@ describe('# DELETE', () => {
     });
 
     const invalidId = id + 'a';
-    it('should not DELETE a post if id is invalid', async () => {
+    it('should not DELETE a post if id is invsalid', async () => {
       const res = await chai.request(testApp).delete('/api/v1/posts/' + invalidId);
       res.should.have.status(404);
       res.body.should.be.a('object');

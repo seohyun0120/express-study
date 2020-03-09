@@ -12,7 +12,7 @@ chai.should();
 const testApp: Application = express();
 let mongoose: Db;
 
-describe('# GET ALL', () => {
+describe('# GET ALL', function () {
   before('connect database & server', async () => {
     mongoose = await mongooseLoader();
     await expressLoader(testApp);
@@ -26,7 +26,7 @@ describe('# GET ALL', () => {
     await mongoose.dropDatabase();
   });
 
-  describe('## /GET post', () => {
+  describe('## /GET post', function () {
     it('should GET one post', async () => {
       const res = await chai.request(testApp).get('/api/v1/posts/');
       res.should.have.status(200);
