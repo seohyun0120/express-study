@@ -26,11 +26,11 @@ const createPost = async function (
   content?: string
 ) {
   if (author === '' && title === '') {
-    throw new Exceptions.AuthorTitleEmptyException();
+    throw new Exceptions.AuthorTitleAreEmptyException();
   } else if (author === '') {
-    throw new Exceptions.AuthorEmptyException();
+    throw new Exceptions.AuthorIsEmptyException();
   } else if (title === '') {
-    throw new Exceptions.TitleEmptyException();
+    throw new Exceptions.TitleIsEmptyException();
   }
 
   const post: IPost = await PostModel.create({ title, author, content });
@@ -47,7 +47,7 @@ const updatePost = async function (id: string, title: string, content?: string) 
   if (isNull(post)) {
     throw new Exceptions.PostNotFoundException(id);
   } else if (title === '') {
-    throw new Exceptions.TitleEmptyException();
+    throw new Exceptions.TitleIsEmptyException();
   }
 
   const result: IPostResult = post.toObject({ versionKey: false });

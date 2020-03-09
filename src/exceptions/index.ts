@@ -1,6 +1,6 @@
-import AuthorEmptyException from './AuthorEmptyException'
-import AuthorTitleEmptyException from './AuthorTitleEmptyException'
+import AuthorIsEmptyException from './AuthorIsEmptyException'
+import AuthorTitleAreEmptyException from './AuthorTitleAreEmptyException'
 import PostNotFoundException from './PostNotFoundException'
-import TitleEmptyException from './TitleEmptyException'
+import TitleIsEmptyException from './TitleIsEmptyException'
 
-export default { AuthorEmptyException, AuthorTitleEmptyException, PostNotFoundException, TitleEmptyException }
+export default { AuthorIsEmptyException, AuthorTitleAreEmptyException, PostNotFoundException, TitleIsEmptyException }
