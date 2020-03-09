@@ -2,7 +2,7 @@ import HttpException from './HttpException';
 
 class AuthorIsEmptyException extends HttpException {
   constructor() {
-    super(400, false, 3, `Author cannot be empty string`);
+    super(400, 3, `Author cannot be empty string`);
   };
 }
 

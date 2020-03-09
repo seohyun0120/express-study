@@ -2,7 +2,7 @@ import HttpException from './HttpException';
 
 class TitleIsEmptyException extends HttpException {
   constructor() {
-    super(400, false, 4, `Title cannot be empty string`);
+    super(400, 4, `Title cannot be empty string`);
   };
 }
 
