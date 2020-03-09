@@ -12,18 +12,18 @@ chai.should();
 const testApp: Application = express();
 let mongoose: Db;
 
-describe('# POST', () => {
-  before('connect database & server', async () => {
+describe('# POST', function () {
+  before('connect database & server', async function () {
     mongoose = await mongooseLoader();
     await expressLoader(testApp);
   });
 
-  after('drop database', async () => {
+  after('drop database', async function () {
     await mongoose.dropDatabase();
   });
 
-  describe('## /POST/:id post', () => {
-    it('should not POST a post if title and author are empty string', async () => {
+  describe('## /POST/:id post', function () {
+    it('should not POST a post if title and author are empty string', async function () {
       const res = await chai.request(testApp).post('/api/v1/posts').send(testParams.code2Test);
       res.should.have.status(400);
       res.body.should.be.a('object');
@@ -33,7 +33,7 @@ describe('# POST', () => {
       res.body.error.should.have.property('message');
     });
 
-    it('should not POST a post if author is empty string', async () => {
+    it('should not POST a post if author is empty string', async function () {
       const res = await chai.request(testApp).post('/api/v1/posts').send(testParams.code3Test);
       res.should.have.status(400);
       res.body.should.be.a('object');
@@ -43,7 +43,7 @@ describe('# POST', () => {
       res.body.error.should.have.property('message');
     });
 
-    it('should not POST a post if title is empty string', async () => {
+    it('should not POST a post if title is empty string', async function () {
       const res = await chai.request(testApp).post('/api/v1/posts').send(testParams.code4Test);
       res.should.have.status(400);
       res.body.should.be.a('object');
@@ -53,7 +53,7 @@ describe('# POST', () => {
       res.body.error.should.have.property('message');
     });
 
-    it('should CREATE a post && check if record is CREATEd', async () => {
+    it('should CREATE a post && check if record is CREATEd', async function () {
       const res = await chai.request(testApp).post('/api/v1/posts').send(testParams.createTest);
       const id = res.body.data._id;
       res.should.have.status(201);

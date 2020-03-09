@@ -14,25 +14,25 @@ const testApp: Application = express();
 let id: string = '';
 let mongoose: Db;
 
-describe('# PATCH', () => {
-  before('connect database & server', async () => {
+describe('# PATCH', function () {
+  before('connect database & server', async function () {
     mongoose = await mongooseLoader();
     await expressLoader(testApp);
   });
 
-  after('drop database', async () => {
+  after('drop database', async function () {
     await mongoose.dropDatabase();
   });
 
-  describe('## /PATCH/:id post', () => {
-    beforeEach('initialize DB && create a post', async () => {
+  describe('## /PATCH/:id post', function () {
+    beforeEach('initialize DB && create a post', async function () {
       await mongoose.dropDatabase();
       const result = await chai.request(testApp).post('/api/v1/posts').send(testParams.createTest);
       id = result.body.data._id;
     });
 
     const invalidId = id + 'a';
-    it('should not PATCH a post if id is invalid', async () => {
+    it('should not PATCH a post if id is invalid', async function () {
       const res = await chai.request(testApp).patch('/api/v1/posts/' + invalidId).send(testData.updateTest);
       res.should.have.status(404);
       res.body.should.be.a('object');
@@ -42,7 +42,7 @@ describe('# PATCH', () => {
       res.body.error.should.have.property('message');
     });
 
-    it('should not PATCH a post if title is empty string', async () => {
+    it('should not PATCH a post if title is empty string', async function () {
       const res = await chai.request(testApp).patch('/api/v1/posts/' + id).send(testData.code4Test);
       res.should.have.status(400);
       res.body.should.be.a('object');
@@ -52,7 +52,7 @@ describe('# PATCH', () => {
       res.body.error.should.have.property('message');
     });
 
-    it('should PATCH a post && check if record is PATCHed', async () => {
+    it('should PATCH a post && check if record is PATCHed', async function () {
       const res = await chai.request(testApp).patch('/api/v1/posts/' + id).send(testData.updateTest);
       res.should.have.status(201);
       res.body.should.be.a('object');

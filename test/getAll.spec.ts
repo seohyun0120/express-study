@@ -12,22 +12,22 @@ chai.should();
 const testApp: Application = express();
 let mongoose: Db;
 
-describe('# GET ALL', () => {
-  before('connect database & server', async () => {
+describe('# GET ALL', function () {
+  before('connect database & server', async function () {
     mongoose = await mongooseLoader();
     await expressLoader(testApp);
   });
 
-  before('create a post', async () => {
+  before('create a post', async function () {
     await chai.request(testApp).post('/api/v1/posts').send(testData.createTest);
   });
 
-  after('drop database', async () => {
+  after('drop database', async function () {
     await mongoose.dropDatabase();
   });
 
-  describe('## /GET post', () => {
-    it('should GET one post', async () => {
+  describe('## /GET post', function () {
+    it('should GET one post', async function () {
       const res = await chai.request(testApp).get('/api/v1/posts/');
       res.should.have.status(200);
       res.body.should.be.a('object');

@@ -13,23 +13,23 @@ const testApp: Application = express();
 let id: string = '';
 let mongoose: Db;
 
-describe('# CREATE', () => {
-  before('connect database & server', async () => {
+describe('# CREATE', function () {
+  before('connect database & server', async function () {
     mongoose = await mongooseLoader();
     await expressLoader(testApp);
   });
 
-  after('drop database', async () => {
+  after('drop database', async function () {
     await mongoose.dropDatabase();
   });
 
-  describe('## /GET/:id post', () => {
-    before('create a post', async () => {
+  describe('## /GET/:id post', function () {
+    before('create a post', async function () {
       const result = await chai.request(testApp).post('/api/v1/posts').send(testParams.createTest);
       id = result.body.data._id;
     });
 
-    it('should not GET a post if id is invalid', async () => {
+    it('should not GET a post if id is invalid', async function () {
       const invalidId = id + 'a';
       const res = await chai.request(testApp).get('/api/v1/posts/' + invalidId);
       res.should.have.status(404);
@@ -40,7 +40,7 @@ describe('# CREATE', () => {
       res.body.error.should.have.property('message');
     });
 
-    it('should GET a post by the given id', async () => {
+    it('should GET a post by the given id', async function () {
       const res = await chai.request(testApp).get('/api/v1/posts/' + id);
       res.should.have.status(200);
       res.body.should.be.a('object');

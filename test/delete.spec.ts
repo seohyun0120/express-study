@@ -13,25 +13,25 @@ const testApp: Application = express();
 let id: string = '';
 let mongoose: Db;
 
-describe('# DELETE', () => {
-  before('connect database & server', async () => {
+describe('# DELETE', function () {
+  before('connect database & server', async function () {
     mongoose = await mongooseLoader();
     await expressLoader(testApp);
   });
 
-  after('drop database', async () => {
+  after('drop database', async function () {
     await mongoose.dropDatabase();
   });
 
-  describe('## /DELETE post', async () => {
-    beforeEach('initialize DB && create a post', async () => {
+  describe('## /DELETE post', async function () {
+    beforeEach('initialize DB && create a post', async function () {
       await mongoose.dropDatabase();
       const result = await chai.request(testApp).post('/api/v1/posts').send(testParams.createTest);
       id = result.body.data._id;
     });
 
     const invalidId = id + 'a';
-    it('should not DELETE a post if id is invalid', async () => {
+    it('should not DELETE a post if id is invsalid', async function () {
       const res = await chai.request(testApp).delete('/api/v1/posts/' + invalidId);
       res.should.have.status(404);
       res.body.should.be.a('object');
@@ -41,7 +41,7 @@ describe('# DELETE', () => {
       res.body.error.should.have.property('message');
     });
 
-    it('should DELETE a post && check if record is DELETEd', async () => {
+    it('should DELETE a post && check if record is DELETEd', async function () {
       const res = await chai.request(testApp).delete('/api/v1/posts/' + id);
       res.should.have.status(200);
       res.body.should.have.property('data');

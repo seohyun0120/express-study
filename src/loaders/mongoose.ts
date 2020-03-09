@@ -4,7 +4,7 @@ import config from '../utils/config';
 
 const DATABASE_URL = `mongodb://${config.MONGO_ADDRESS}${config.DB_NAME}`;
 
-export default async (): Promise<Db> => {
+export default async function (): Promise<Db> {
   const { connection } = await mongoose.connect(DATABASE_URL, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
