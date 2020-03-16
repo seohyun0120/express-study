@@ -5,6 +5,7 @@
   "scripts": {
     "start": "env NODE_ENV=prod tsc && node dist",
     "start:dev": "env NODE_ENV=dev nodemon",
+    "start:home": "env NODE_ENV=home nodemon",
     "test": "env NODE_ENV=test mocha --exit --timeout 10000"
   },
   "repository": {
