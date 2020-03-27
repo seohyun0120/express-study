@@ -69,11 +69,17 @@ interface IUpdatePost {
   content?: string;
 }
 
+interface IUpdateComment {
+  text: string;
+}
+
+
 export {
   IPost,
   ICreatePost,
   ICreateComment,
   IUpdatePost,
+  IUpdateComment,
   IPostMongooseResult,
   IPostResult,
 }
