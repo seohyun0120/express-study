@@ -5,6 +5,17 @@ const PostSchema: Schema = new Schema({
   author: { type: String, required: true },
   title: { type: String, required: true },
   content: { type: String },
+  viewNum: { type: Number, required: true, default: 0 },
+  comments: [
+    {
+      type: new Schema({
+        author: { type: String, required: true },
+        text: { type: String, required: true }, 
+      }, {
+        timestamps: true,
+      })
+    }
+  ]
 }, {
   timestamps: true,
 });
