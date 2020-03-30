@@ -2,17 +2,18 @@ import { isNull } from 'lodash';
 import { IPostResult, IPost } from '../../../Interfaces/IPost';
 import { PostModel } from '../../../models/post';
 import Exceptions from '../../../exceptions';
+import isEmptyOrSpaces from '../../../utils/isEmptyOrSpaces'
 
 const createComment = async (
   id: string,
   author: string,
   text: string
 ) => {
-  if (author === '' && text === '') {
+  if (isEmptyOrSpaces(author) && isEmptyOrSpaces(text)) {
     throw new Exceptions.AuthorTitleAreEmptyException();
-  } else if (author === '') {
+  } else if (isEmptyOrSpaces(author)) {
     throw new Exceptions.AuthorIsEmptyException();
-  } else if (text === '') {
+  } else if (isEmptyOrSpaces(text)) {
     throw new Exceptions.TextIsEmptyException();
   }
 
@@ -31,7 +32,7 @@ const createComment = async (
 }
 
 const updateComment = async (id: string, commentId: string, text: string) => {
-  if (text === '') {
+  if (isEmptyOrSpaces(text)) {
     throw new Exceptions.TextIsEmptyException();
   }
 
@@ -43,7 +44,7 @@ const updateComment = async (id: string, commentId: string, text: string) => {
 
   if (isNull(post)) {
     throw new Exceptions.PostNotFoundException(id);
-  } else if (text === '') {
+  } else if (isEmptyOrSpaces(text)) {
     throw new Exceptions.TextIsEmptyException();
   }
 

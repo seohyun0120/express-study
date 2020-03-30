@@ -12,20 +12,20 @@ const updateTest: IUpdatePost = {
 }
 
 const code2Test: ICreatePost = {
-  author: '',
+  author: '          ',
   title: '',
   content: 'code 2 error'
 }
 
 const code3Test: ICreatePost = {
-  author: '',
+  author: '       ',
   title: 'error 3',
   content: 'code 3 error'
 }
 
 const code4Test: ICreatePost = {
   author: 'tester',
-  title: '',
+  title: '       ',
   content: 'code 4 error'
 }
 
