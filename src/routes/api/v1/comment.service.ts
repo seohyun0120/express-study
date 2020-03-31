@@ -53,8 +53,8 @@ const updateComment = async (id: string, commentId: string, text: string) => {
 }
 
 const deleteComment = async (id: string, commentId: string) => {
-  const post: IPost = await PostModel.findByIdAndUpdate(
-    { "_id": id },
+  const post: IPost = await PostModel.findOneAndUpdate(
+    { "_id": id, "comments._id": commentId },
     { $pull: { comments: { _id: commentId } } },
     { new: true }
   );
