@@ -13,7 +13,6 @@ interface IComment extends Document {
   text: string;
 }
 
-
 interface IPostMongooseResult {
   _id: string;
   title: string;
@@ -53,6 +52,13 @@ interface IPostResult {
   ]
 }
 
+interface IGetPostsResult {
+  totalCount: number;
+  page: number;
+  pageLimit: number;
+  data: IPostResult[]
+}
+
 interface ICreatePost {
   author: string;
   title: string;
@@ -73,7 +79,6 @@ interface IUpdateComment {
   text: string;
 }
 
-
 export {
   IPost,
   ICreatePost,
@@ -82,4 +87,5 @@ export {
   IUpdateComment,
   IPostMongooseResult,
   IPostResult,
+  IGetPostsResult
 }
