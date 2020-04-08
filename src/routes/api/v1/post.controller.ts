@@ -6,8 +6,9 @@ import PostNotFoundException from '../../../exceptions/PostNotFoundException';
 
 const getPosts = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const posts = await PostService.getPosts({});
-    return res.status(200).json({ isSucceeded: true, data: posts });
+    const query = req.query;
+    const posts = await PostService.getPosts(query);
+    return res.status(200).json({ isSucceeded: true, ...posts });
   } catch (error) {
     return next(error);
   }

@@ -1,12 +1,17 @@
 import { isNull, map, omit } from 'lodash';
-import { IPostMongooseResult, IPostResult, IPost } from '../../../Interfaces/IPost';
+import { IPostMongooseResult, IPostResult, IPost, IGetPostsResult } from '../../../Interfaces/IPost';
 import { PostModel } from '../../../models/post';
 import Exceptions from '../../../exceptions';
 import isEmptyOrSpaces from '../../../utils/isEmptyOrSpaces';
 
-const getPosts = async (query: object) => {
-  const posts: IPostMongooseResult[] = await PostModel.find(query).lean();
-  const result: IPostResult[] = map(posts, (p) => omit(p, '__v'));
+const getPosts = async (query: any) => {
+  const page = parseInt(query.page) || 1;
+  const pageLimit = parseInt(query.pageLimit) || 10;
+  const totalCount = await PostModel.countDocuments({});
+
+  const posts: IPostMongooseResult[] = await PostModel.find({}).skip((page - 1) * pageLimit).limit(pageLimit).lean();
+  const posts_lean: IPostResult[] = map(posts, (p) => omit(p, '__v'));
+  const result: IGetPostsResult = { totalCount, page, pageLimit, data: posts_lean };
   return result;
 }
 
