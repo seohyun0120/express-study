@@ -2,6 +2,7 @@ import { isNull, map, omit } from 'lodash';
 import { IPostMongooseResult, IPostResult, IPost } from '../../../Interfaces/IPost';
 import { PostModel } from '../../../models/post';
 import Exceptions from '../../../exceptions';
+import isEmptyOrSpaces from '../../../utils/isEmptyOrSpaces';
 
 const getPosts = async (query: object) => {
   const posts: IPostMongooseResult[] = await PostModel.find(query).lean();
@@ -10,13 +11,17 @@ const getPosts = async (query: object) => {
 }
 
 const getPost = async (id: string) => {
-  const post: IPostMongooseResult = await PostModel.findById(id).lean();
+  const post: IPost = await PostModel.findByIdAndUpdate(
+    id,
+    { $inc: { viewNum: 1 } },
+    { new: true }
+  );
 
   if (isNull(post)) {
     throw new Exceptions.PostNotFoundException(id);
   }
 
-  const result: IPostResult = omit(post, '__v');
+  const result: IPostResult = post.toObject({ versionKey: false });
   return result;
 }
 
@@ -25,11 +30,11 @@ const createPost = async (
   title: string,
   content?: string
 ) => {
-  if (author === '' && title === '') {
+  if (isEmptyOrSpaces(author) && isEmptyOrSpaces(title)) {
     throw new Exceptions.AuthorTitleAreEmptyException();
-  } else if (author === '') {
+  } else if (isEmptyOrSpaces(author)) {
     throw new Exceptions.AuthorIsEmptyException();
-  } else if (title === '') {
+  } else if (isEmptyOrSpaces(title)) {
     throw new Exceptions.TitleIsEmptyException();
   }
 
@@ -46,7 +51,7 @@ const updatePost = async (id: string, title: string, content?: string) => {
 
   if (isNull(post)) {
     throw new Exceptions.PostNotFoundException(id);
-  } else if (title === '') {
+  } else if (isEmptyOrSpaces(title)) {
     throw new Exceptions.TitleIsEmptyException();
   }
 

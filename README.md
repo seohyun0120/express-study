@@ -137,3 +137,44 @@ src
 #### 7. Error Handler Middleware (3/9)
 
 기본 error handler를 정의합니다. **next()**로 오류를 전달하지만, error handler에서 해당 오류를 처리하지 않을 경우, 기본 error handler가 해당 오류를 처리합니다. **(500, Internal Server Error)** 
+
+
+#### 8. DB 스키마 확장 (3/27)
+
+추가 기능을 위해 기존에 있던 DB의 스키마를 변경했다. 변경된 내용은, `viewNum` field가 추가되었고, `comments` field가 추가되었다. 하나의 글에 여러 개의 댓글을 가질 수 있는 one-to-many relation 구조이다. 이를 위해 Embedded Document pattern을 사용했다.
+
+변경된 스키마는 다음과 같다.
+```
+{
+  _id: string;
+  title: string;
+  author: string;
+  content: string;
+  createdAt: Date;
+  updatedAt: Date;
+  __v: number;
+  viewNum: number;
+  comments: [
+    {
+      _id: string;
+      author: string;
+      text: string;
+      createdAt: Date;
+      updatedAt: Date;
+    }
+  ]
+}
+```
+
+#### 9. 댓글 기능으로 인한 API 추가 개발 (3/30 ~ 4/1)
+
+| HTTP METHOD | request url | description           | Reqeust                |
+| ----------- | ----------- | --------------------- | ---------------------- |
+| PATCH        | /:id/comments           | 새로운 댓글을 생성한다.    | id, author, text  |
+| PATCH        | /:id/comments/:commentId        | id로 글을 조회하고, commentId로 해당 댓글을 수정한다. | id, commentId, text |
+| DELETE      | /:id /comments/:commentId       | id로 글을 조회하고, commentId로 해당 댓글을 삭제한다. | id, commentId  |
+
+#### 10. Validation
+
+기존의 폼은 비어있는 문자열일 경우에만 에러를 보여줬다. 하지만, 공백으로만 이루어진 문자열을 입력할 경우를 고려하지 않았기 때문에 조건을 추가해주었다. isEmptyOrSpace() 함수를 통해 폼 유효성 검사를 진행한다.
+

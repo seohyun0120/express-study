@@ -4,7 +4,15 @@ interface IPost extends Document {
   author: string;
   title: string;
   content: string;
+  viewNum: number;
+  comments: IComment[];
 }
+
+interface IComment extends Document {
+  author: string;
+  text: string;
+}
+
 
 interface IPostMongooseResult {
   _id: string;
@@ -14,6 +22,16 @@ interface IPostMongooseResult {
   createdAt: Date;
   updatedAt: Date;
   __v: number;
+  viewNum: number;
+  comments: [
+    {
+      _id: string;
+      author: string;
+      text: string;
+      createdAt: Date;
+      updatedAt: Date;
+    }
+  ]
 }
 
 interface IPostResult {
@@ -23,6 +41,16 @@ interface IPostResult {
   content: string;
   createdAt: Date;
   updatedAt: Date;
+  viewNum: number;
+  comments: [
+    {
+      _id: string;
+      author: string;
+      text: string;
+      createdAt: Date;
+      updatedAt: Date;
+    }
+  ]
 }
 
 interface ICreatePost {
@@ -31,15 +59,27 @@ interface ICreatePost {
   content?: string;
 }
 
+interface ICreateComment {
+  author: string;
+  text: string;
+}
+
 interface IUpdatePost {
   title: string;
   content?: string;
 }
 
+interface IUpdateComment {
+  text: string;
+}
+
+
 export {
   IPost,
   ICreatePost,
+  ICreateComment,
   IUpdatePost,
+  IUpdateComment,
   IPostMongooseResult,
   IPostResult,
 }
