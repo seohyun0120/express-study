@@ -5,8 +5,8 @@ import Exceptions from '../../../exceptions';
 import isEmptyOrSpaces from '../../../utils/isEmptyOrSpaces';
 
 const getPosts = async (query: any) => {
-  const page = parseInt(query.page) || 1;
-  const pageLimit = parseInt(query.pageLimit) || 10;
+  const page = query ? parseInt(query.page) : 1;
+  const pageLimit = query ? parseInt(query.pageLimit) : 10;
   const totalCount = await PostModel.countDocuments({});
 
   const posts: IPostMongooseResult[] = await PostModel.find({}).skip((page - 1) * pageLimit).limit(pageLimit).lean();
@@ -15,12 +15,31 @@ const getPosts = async (query: any) => {
   return result;
 }
 
-const getPost = async (id: string) => {
-  const post: IPost = await PostModel.findByIdAndUpdate(
-    id,
+const getPost = async (id: string, type: string) => {
+  let post: IPost;
+  let idQueryOption: object;
+  let sortOption: object;
+
+  switch (type) {
+    case 'prev':
+      idQueryOption = { _id: { '$lt': id } };
+      sortOption = { _id: -1 };
+      break;
+    case 'next':
+      idQueryOption = { _id: { '$gt': id } };
+      sortOption = { _id: 1 };
+      break;
+    default:
+      idQueryOption = { _id: id };
+      sortOption = null;
+      break;
+  }
+
+  post = await PostModel.findOneAndUpdate(
+    idQueryOption,
     { $inc: { viewNum: 1 } },
     { new: true }
-  );
+  ).sort(sortOption);
 
   if (isNull(post)) {
     throw new Exceptions.PostNotFoundException(id);

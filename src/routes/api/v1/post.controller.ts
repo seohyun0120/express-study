@@ -16,12 +16,13 @@ const getPosts = async (req: Request, res: Response, next: NextFunction) => {
 
 const getPost = async (req: Request, res: Response, next: NextFunction) => {
   const { id } = req.params;
+  const type = req.query.type;
   if (!isValidObjectId(id)) {
     return next(new PostNotFoundException(id));
   }
 
   try {
-    const post = await PostService.getPost(id);
+    const post = await PostService.getPost(id, type);
     return res.status(200).json({ isSucceeded: true, data: post });
   } catch (exceptions) {
     return next(exceptions);
