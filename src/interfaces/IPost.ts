@@ -52,6 +52,17 @@ interface IPostResult {
   ]
 }
 
+interface IGetQueryParams {
+  page: string;
+  limit: string;
+  orderBy: Order;
+}
+
+enum Order {
+  desc = 'desc',
+  asc = 'asc'
+}
+
 interface IGetPostsResult {
   totalCount: number;
   page: number;
@@ -87,5 +98,7 @@ export {
   IUpdateComment,
   IPostMongooseResult,
   IPostResult,
-  IGetPostsResult
+  IGetPostsResult,
+  IGetQueryParams,
+  Order,
 }

@@ -39,7 +39,6 @@ const updateComment = async (req: Request, res: Response, next: NextFunction) =>
   }
 }
 
-
 const deleteComment = async (req: Request, res: Response, next: NextFunction) => {
   const { id, commentId } = req.params;
   if (!isValidObjectId(id)) {
