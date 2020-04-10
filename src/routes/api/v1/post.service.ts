@@ -23,16 +23,15 @@ const getPost = async (id: string, type: string) => {
 
   switch (type) {
     case 'prev':
-      idQueryOption = { _id: { '$lt': id } };
-      sortOption = { _id: -1 };
-      break;
-    case 'next':
       idQueryOption = { _id: { '$gt': id } };
       sortOption = { _id: 1 };
       break;
+    case 'next':
+      idQueryOption = { _id: { '$lt': id } };
+      sortOption = { _id: -1 };
+      break;
     default:
       idQueryOption = { _id: id };
-      sortOption = null;
       break;
   }
 

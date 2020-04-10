@@ -17,6 +17,7 @@ const getPosts = async (req: Request, res: Response, next: NextFunction) => {
 const getPost = async (req: Request, res: Response, next: NextFunction) => {
   const { id } = req.params;
   const type = req.query.type;
+
   if (!isValidObjectId(id)) {
     return next(new PostNotFoundException(id));
   }
