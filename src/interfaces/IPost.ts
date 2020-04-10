@@ -55,7 +55,7 @@ interface IPostResult {
 interface IGetPostsResult {
   totalCount: number;
   page: number;
-  pageLimit: number;
+  limit: number;
   data: IPostResult[]
 }
 

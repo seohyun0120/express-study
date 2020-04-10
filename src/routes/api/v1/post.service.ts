@@ -6,12 +6,12 @@ import isEmptyOrSpaces from '../../../utils/isEmptyOrSpaces';
 
 const getPosts = async (query: any) => {
   const page = query ? parseInt(query.page) : 1;
-  const pageLimit = query ? parseInt(query.pageLimit) : 10;
+  const limit = query ? parseInt(query.limit) : 10;
   const totalCount = await PostModel.countDocuments({});
 
-  const posts: IPostMongooseResult[] = await PostModel.find({}).skip((page - 1) * pageLimit).limit(pageLimit).lean();
+  const posts: IPostMongooseResult[] = await PostModel.find({}).skip((page - 1) * limit).limit(limit).lean();
   const posts_lean: IPostResult[] = map(posts, (p) => omit(p, '__v'));
-  const result: IGetPostsResult = { totalCount, page, pageLimit, data: posts_lean };
+  const result: IGetPostsResult = { totalCount, page, limit, data: posts_lean };
   return result;
 }
 
