@@ -1,21 +1,45 @@
 import { isNull, map, omit } from 'lodash';
-import { IPostMongooseResult, IPostResult, IPost } from '../../../Interfaces/IPost';
+import { IPostMongooseResult, IPostResult, IPost, IGetPostsResult, IGetQueryParams, Order } from '../../../Interfaces/IPost';
 import { PostModel } from '../../../models/post';
 import Exceptions from '../../../exceptions';
 import isEmptyOrSpaces from '../../../utils/isEmptyOrSpaces';
 
-const getPosts = async (query: object) => {
-  const posts: IPostMongooseResult[] = await PostModel.find(query).lean();
-  const result: IPostResult[] = map(posts, (p) => omit(p, '__v'));
+const getPosts = async (query: IGetQueryParams) => {
+  const page = query ? parseInt(query.page) : 1;
+  const limit = query ? parseInt(query.limit) : 10;
+  const orderBy = query.orderBy ? query.orderBy : Order.desc;
+  const totalCount = await PostModel.countDocuments({});
+
+  const posts: IPostMongooseResult[] = await PostModel.find({}).skip((page - 1) * limit).limit(limit).sort({ _id: orderBy }).lean();
+  const posts_lean: IPostResult[] = map(posts, (p) => omit(p, '__v'));
+  const result: IGetPostsResult = { totalCount, page, limit, posts: posts_lean };
   return result;
 }
 
-const getPost = async (id: string) => {
-  const post: IPost = await PostModel.findByIdAndUpdate(
-    id,
+const getPost = async (id: string, type: string) => {
+  let post: IPost;
+  let idQueryOption: object;
+  let sortOption: object;
+
+  switch (type) {
+    case 'prev':
+      idQueryOption = { _id: { '$gt': id } };
+      sortOption = { _id: 1 };
+      break;
+    case 'next':
+      idQueryOption = { _id: { '$lt': id } };
+      sortOption = { _id: -1 };
+      break;
+    default:
+      idQueryOption = { _id: id };
+      break;
+  }
+
+  post = await PostModel.findOneAndUpdate(
+    idQueryOption,
     { $inc: { viewNum: 1 } },
     { new: true }
-  );
+  ).sort(sortOption);
 
   if (isNull(post)) {
     throw new Exceptions.PostNotFoundException(id);
