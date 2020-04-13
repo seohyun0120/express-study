@@ -67,7 +67,7 @@ interface IGetPostsResult {
   totalCount: number;
   page: number;
   limit: number;
-  data: IPostResult[]
+  posts: IPostResult[]
 }
 
 interface ICreatePost {

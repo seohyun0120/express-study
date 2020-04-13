@@ -12,7 +12,7 @@ const getPosts = async (query: IGetQueryParams) => {
 
   const posts: IPostMongooseResult[] = await PostModel.find({}).skip((page - 1) * limit).limit(limit).sort({ _id: orderBy }).lean();
   const posts_lean: IPostResult[] = map(posts, (p) => omit(p, '__v'));
-  const result: IGetPostsResult = { totalCount, page, limit, data: posts_lean };
+  const result: IGetPostsResult = { totalCount, page, limit, posts: posts_lean };
   return result;
 }
 

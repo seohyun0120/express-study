@@ -8,7 +8,7 @@ const getPosts = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const query = req.query;
     const posts = await PostService.getPosts(query);
-    return res.status(200).json({ isSucceeded: true, ...posts });
+    return res.status(200).json({ isSucceeded: true, data: posts });
   } catch (error) {
     return next(error);
   }
