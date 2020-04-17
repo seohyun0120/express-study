@@ -10,12 +10,13 @@ const PostSchema: Schema = new Schema({
     {
       type: new Schema({
         author: { type: String, required: true },
-        text: { type: String, required: true }, 
+        text: { type: String, required: true },
       }, {
         timestamps: true,
       })
     }
-  ]
+  ],
+  fileId: { type: Schema.Types.ObjectId }
 }, {
   timestamps: true,
 });

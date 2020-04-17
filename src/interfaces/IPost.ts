@@ -6,6 +6,7 @@ interface IPost extends Document {
   content: string;
   viewNum: number;
   comments: IComment[];
+  fileId: string;
 }
 
 interface IComment extends Document {
@@ -30,7 +31,8 @@ interface IPostMongooseResult {
       createdAt: Date;
       updatedAt: Date;
     }
-  ]
+  ];
+  fileId: string;
 }
 
 interface IPostResult {
@@ -50,6 +52,7 @@ interface IPostResult {
       updatedAt: Date;
     }
   ]
+  fileId: string;
 }
 
 interface IGetQueryParams {
@@ -74,6 +77,7 @@ interface ICreatePost {
   author: string;
   title: string;
   content?: string;
+  fileId: string;
 }
 
 interface ICreateComment {
@@ -84,6 +88,7 @@ interface ICreateComment {
 interface IUpdatePost {
   title: string;
   content?: string;
+  fileId: string;
 }
 
 interface IUpdateComment {
