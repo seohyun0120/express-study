@@ -1,4 +1,5 @@
 import { Document } from 'mongoose';
+import IFile from './IFile';
 
 interface IPost extends Document {
   author: string;
@@ -7,6 +8,16 @@ interface IPost extends Document {
   viewNum: number;
   comments: IComment[];
   fileId: string;
+}
+
+interface IPostWithFile extends Document {
+  author: string;
+  title: string;
+  content: string;
+  viewNum: number;
+  comments: IComment[];
+  fileId: string;
+  file: IFile;
 }
 
 interface IComment extends Document {
@@ -61,6 +72,11 @@ interface IGetQueryParams {
   orderBy: Order;
 }
 
+interface IGetPostResult {
+  post: IPost;
+  file: IFile;
+}
+
 enum Order {
   desc = 'desc',
   asc = 'asc'
@@ -97,6 +113,7 @@ interface IUpdateComment {
 
 export {
   IPost,
+  IPostWithFile,
   ICreatePost,
   ICreateComment,
   IUpdatePost,
@@ -104,6 +121,7 @@ export {
   IPostMongooseResult,
   IPostResult,
   IGetPostsResult,
+  IGetPostResult,
   IGetQueryParams,
   Order,
 }
