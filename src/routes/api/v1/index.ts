@@ -2,12 +2,13 @@ import express from 'express';
 import multer from 'multer';
 import PostController from './post.controller';
 import CommentController from './comment.controller';
-import mongooseLoader from '../../../loaders/mongoose'
+import mongooseLoader from '../../../loaders/mongoose';
 import MulterGridfsStorage from 'multer-gridfs-storage';
 
-const storage = new MulterGridfsStorage({
+export const storage = new MulterGridfsStorage({
   db: mongooseLoader(),
   file: (req, file) => {
+    file.metadata = { originalname: file.originalname }
     return {
       filename: 'file_' + Date.now(),
       bucketName: 'uploadFiles',
