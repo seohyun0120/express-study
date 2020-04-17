@@ -32,8 +32,10 @@ const getPost = async (req: Request, res: Response, next: NextFunction) => {
 
 const createPost = async (req: Request, res: Response, next: NextFunction) => {
   const { author, title, content } = req.body as ICreatePost;
+  const fileId = req.file.id;
+
   try {
-    const post = await PostService.createPost(author, title, content);
+    const post = await PostService.createPost(author, title, content, fileId);
     return res.status(201).json({ isSucceeded: true, data: post });
   } catch (exceptions) {
     return next(exceptions);

@@ -52,7 +52,8 @@ const getPost = async (id: string, type: string) => {
 const createPost = async (
   author: string,
   title: string,
-  content?: string
+  content?: string,
+  fileId?: string
 ) => {
   if (isEmptyOrSpaces(author) && isEmptyOrSpaces(title)) {
     throw new Exceptions.AuthorTitleAreEmptyException();
@@ -62,7 +63,12 @@ const createPost = async (
     throw new Exceptions.TitleIsEmptyException();
   }
 
-  const post: IPost = await PostModel.create({ title, author, content });
+  const post: IPost = await PostModel.create({
+    title,
+    author,
+    content,
+    fileId,
+  });
   const result: IPostResult = post.toObject({ versionKey: false });
   return result;
 }
