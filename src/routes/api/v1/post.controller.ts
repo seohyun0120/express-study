@@ -30,9 +30,22 @@ const getPost = async (req: Request, res: Response, next: NextFunction) => {
   }
 }
 
+const getPostFile = async (req: Request, res: Response, next: NextFunction) => {
+  const { fileId } = req.params;
+
+  res.header('Content-Disposition', 'attachment');
+
+  try {
+    return await PostService.getPostFile(fileId, res);
+  } catch (exceptions) {
+    return next(exceptions);
+  }
+}
+
 const createPost = async (req: Request, res: Response, next: NextFunction) => {
   const { author, title, content } = req.body as ICreatePost;
   const fileId = req.file.id;
+  console.log(req.file);
 
   try {
     const post = await PostService.createPost(author, title, content, fileId);
@@ -72,4 +85,4 @@ const deletePost = async (req: Request, res: Response, next: NextFunction) => {
   }
 }
 
-export default { getPosts, getPost, createPost, updatePost, deletePost };
+export default { getPosts, getPost, getPostFile, createPost, updatePost, deletePost };
