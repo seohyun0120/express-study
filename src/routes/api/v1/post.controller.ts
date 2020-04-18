@@ -43,7 +43,7 @@ const getPostFile = async (req: Request, res: Response, next: NextFunction) => {
 const createPost = async (req: Request, res: Response, next: NextFunction) => {
   const { author, title, content } = req.body as ICreatePost;
   console.log(req.file);
-  const fileId = req.file.id;
+  const fileId = req.file ? req.file.id : null;
 
   try {
     const post = await PostService.createPost(author, title, content, fileId);
