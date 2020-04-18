@@ -31,12 +31,10 @@ const getPost = async (req: Request, res: Response, next: NextFunction) => {
 }
 
 const getPostFile = async (req: Request, res: Response, next: NextFunction) => {
-  const { fileId } = req.params;
-
-  res.header('Content-Disposition', 'attachment');
+  const { filename } = req.params;
 
   try {
-    return await PostService.getPostFile(fileId, res);
+    return await PostService.getPostFile(filename, req, res);
   } catch (exceptions) {
     return next(exceptions);
   }
@@ -44,8 +42,8 @@ const getPostFile = async (req: Request, res: Response, next: NextFunction) => {
 
 const createPost = async (req: Request, res: Response, next: NextFunction) => {
   const { author, title, content } = req.body as ICreatePost;
-  const fileId = req.file.id;
   console.log(req.file);
+  const fileId = req.file.id;
 
   try {
     const post = await PostService.createPost(author, title, content, fileId);
