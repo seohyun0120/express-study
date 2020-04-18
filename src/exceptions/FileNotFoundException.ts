@@ -1,8 +1,8 @@
 import HttpException from './HttpException';
 
 class FileNotFoundException extends HttpException {
-  constructor() {
-    super(404, 1, `File Not found`);
+  constructor(filename: string) {
+    super(404, 1, `File ${filename} Not found`);
   };
 }
 
