@@ -1,13 +1,12 @@
+import { Response, Request } from 'express';
 import { isNull, map, omit } from 'lodash';
-import { GridFSBucket, ObjectID } from 'mongodb';
-import { IPostMongooseResult, IPostResult, IPost, IGetPostsResult, IGetQueryParams, Order, IPostWithFile } from '../../../Interfaces/IPost';
-import IFile from '../../../interfaces/IFile';
-import { PostModel } from '../../../models/post';
-import { FileModel } from '../../../models/file';
-import Exceptions from '../../../exceptions';
-import isEmptyOrSpaces from '../../../utils/isEmptyOrSpaces';
+import { GridFSBucket } from 'mongodb';
 import { storage } from '.';
-import { Response } from 'express';
+import Exceptions from '../../../exceptions';
+import IFile from '../../../interfaces/IFile';
+import { IPostMongooseResult, IPostResult, IPost, IGetPostsResult, IGetQueryParams, Order, IPostWithFile } from '../../../Interfaces/IPost';
+import { PostModel, FileModel } from '../../../models';
+import { isEmptyOrSpaces, getDownloadFilename } from '../../../utils';
 
 const getPosts = async (query: IGetQueryParams) => {
   const page = query ? parseInt(query.page) : 1;
@@ -41,7 +40,6 @@ const getPost = async (id: string, type: string) => {
       break;
   }
 
-  // 해당 post가 있는지 확인후 post에 저장
   post = await PostModel.findOneAndUpdate(
     idQueryOption,
     { $inc: { viewNum: 1 } },
@@ -52,23 +50,37 @@ const getPost = async (id: string, type: string) => {
     throw new Exceptions.PostNotFoundException(id);
   }
 
-  // post.fileId가 존재하면, gridFS에서 값을 가져와 post에 부가적인 값을 넣어준다.
   file = post.fileId ? await FileModel.findOne({ _id: post.fileId }) : null;
 
   const result: IPostWithFile = { ...post.toObject({ versionKey: false }), file };
   return result;
 }
 
-const getPostFile = async (fileId: string, res: Response) => {
+const getPostFile = async (filename: string, req: Request, res: Response) => {
+  const file: IFile = await FileModel.findOne({ filename });
+  if (isNull(file)) {
+    throw new Exceptions.FileNotFoundException(filename);
+  }
+
+  const mimetype = file.contentType;
+
+  res.writeHead(200, {
+    'Content-Type': mimetype,
+    'Content-Disposition': 'inline; filename=' + getDownloadFilename(req, file.metadata.originalname)
+  });
+
   const gridFSBucket = new GridFSBucket(storage.db, { 'bucketName': 'uploadFiles' });
-  const stream = gridFSBucket.openDownloadStream(new ObjectID(fileId));
-  return stream
-    .on('error', (err: any) => {
-      if (err.code === 'ENOENT') {
-        throw new Exceptions.FileNotFoundException();
-      }
+  const stream = gridFSBucket.openDownloadStreamByName(filename);
+  stream
+    .on('error', (err) => {
+      console.log(err);
+      res.end();
     })
-    .pipe(res);
+    .on('finish', () => {
+      console.log('done');
+      process.exit(0);
+    });
+  return stream.pipe(res);
 }
 
 const createPost = async (
