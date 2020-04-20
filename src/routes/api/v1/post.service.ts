@@ -153,10 +153,11 @@ const deletePost = async (id: string) => {
     throw new Exceptions.PostNotFoundException(id);
   }
 
-  const file: IFile = post ? await FileModel.findByIdAndDelete(post.fileId) : null;
-
-  if (isNull(file)) {
-    throw new Exceptions.FileNotFoundException(post.fileId);
+  if (post.fileId) {
+    const file = await FileModel.findByIdAndDelete(post.fileId);
+    if (isNull(file)) {
+      throw new Exceptions.FileNotFoundException(post.fileId);
+    }
   }
 
   const result: IPostResult = post.toObject({ versionKey: false });
