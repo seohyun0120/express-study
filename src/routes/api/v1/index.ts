@@ -23,7 +23,7 @@ const router = express.Router();
 router.get('/', PostController.getPosts);
 router.get('/:id', PostController.getPost);
 router.post('/', upload, PostController.createPost);
-router.patch('/:id', PostController.updatePost);
+router.patch('/:id', upload, PostController.updatePost);
 router.patch('/:id/comments', CommentController.createComment);
 router.patch('/:id/comments/:commentId', CommentController.updateComment);
 router.delete('/:id', PostController.deletePost);
