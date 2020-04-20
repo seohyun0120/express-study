@@ -42,7 +42,6 @@ const getPostFile = async (req: Request, res: Response, next: NextFunction) => {
 
 const createPost = async (req: Request, res: Response, next: NextFunction) => {
   const { author, title, content } = req.body as ICreatePost;
-  console.log(req.file);
   const fileId = req.file ? req.file.id : null;
 
   try {
@@ -56,13 +55,15 @@ const createPost = async (req: Request, res: Response, next: NextFunction) => {
 const updatePost = async (req: Request, res: Response, next: NextFunction) => {
   const { id } = req.params;
   const { title, content } = req.body as IUpdatePost;
+  const fileId = req.file ? req.file.id : null;
+  console.log(req.body);
 
   if (!isValidObjectId(id)) {
     return next(new PostNotFoundException(id));
   }
 
   try {
-    const post = await PostService.updatePost(id, title, content);
+    const post = await PostService.updatePost(id, title, content, fileId);
     return res.status(201).json({ isSucceeded: true, data: post });
   } catch (exceptions) {
     return next(exceptions);
@@ -71,6 +72,7 @@ const updatePost = async (req: Request, res: Response, next: NextFunction) => {
 
 const deletePost = async (req: Request, res: Response, next: NextFunction) => {
   const { id } = req.params;
+
   if (!isValidObjectId(id)) {
     return next(new PostNotFoundException(id));
   }
