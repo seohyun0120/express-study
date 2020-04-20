@@ -7,6 +7,7 @@ import IFile from '../../../interfaces/IFile';
 import { IPostMongooseResult, IPostResult, IPost, IGetPostsResult, IGetQueryParams, Order, IPostWithFile } from '../../../Interfaces/IPost';
 import { PostModel, FileModel } from '../../../models';
 import { isEmptyOrSpaces, getDownloadFilename } from '../../../utils';
+import { isUndefined } from 'util';
 
 const getPosts = async (query: IGetQueryParams) => {
   const page = query ? parseInt(query.page) : 1;
@@ -109,19 +110,39 @@ const createPost = async (
 }
 
 const updatePost = async (id: string, title: string, content?: string, fileId?: string) => {
-  const post: IPost = await PostModel.findByIdAndUpdate(id, {
-    title,
-    content,
-    fileId,
-  }, { new: true });
+  let updatedPost: IPost;
 
-  if (isNull(post)) {
+  if (isUndefined(fileId)) {
+    updatedPost = await PostModel.findByIdAndUpdate(id, {
+      title,
+      content,
+    }, { new: true });
+  } else {
+    let beforePost = await PostModel.findById(id);
+    await FileModel.findByIdAndDelete(beforePost.fileId);
+
+    if (isNull(fileId)) {
+      updatedPost = await PostModel.findByIdAndUpdate(id, {
+        title,
+        content,
+        fileId: null
+      }, { new: true });
+    } else {
+      updatedPost = await PostModel.findByIdAndUpdate(id, {
+        title,
+        content,
+        fileId
+      }, { new: true });
+    }
+  }
+
+  if (isNull(updatedPost)) {
     throw new Exceptions.PostNotFoundException(id);
   } else if (isEmptyOrSpaces(title)) {
     throw new Exceptions.TitleIsEmptyException();
   }
 
-  const result: IPostResult = post.toObject({ versionKey: false });
+  const result: IPostResult = updatedPost.toObject({ versionKey: false });
   return result;
 }
 
