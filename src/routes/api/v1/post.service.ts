@@ -108,10 +108,11 @@ const createPost = async (
   return result;
 }
 
-const updatePost = async (id: string, title: string, content?: string) => {
+const updatePost = async (id: string, title: string, content?: string, fileId?: string) => {
   const post: IPost = await PostModel.findByIdAndUpdate(id, {
     title,
-    content
+    content,
+    fileId,
   }, { new: true });
 
   if (isNull(post)) {
@@ -129,6 +130,12 @@ const deletePost = async (id: string) => {
 
   if (isNull(post)) {
     throw new Exceptions.PostNotFoundException(id);
+  }
+
+  const file: IFile = post ? await FileModel.findByIdAndDelete(post.fileId) : null;
+
+  if (isNull(file)) {
+    throw new Exceptions.FileNotFoundException(post.fileId);
   }
 
   const result: IPostResult = post.toObject({ versionKey: false });
