@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { isValidObjectId } from 'mongoose';
-import { ICreatePost, IUpdatePost } from '../../../interfaces/IPost';
+import { ICreatePost, IPostResult } from '../../../interfaces/IPost';
 import PostService from './post.service';
 import PostNotFoundException from '../../../exceptions/PostNotFoundException';
 
@@ -54,16 +54,24 @@ const createPost = async (req: Request, res: Response, next: NextFunction) => {
 
 const updatePost = async (req: Request, res: Response, next: NextFunction) => {
   const { id } = req.params;
-  const { title, content } = req.body as IUpdatePost;
-  const fileId = req.file ? req.file.id : null;
-  console.log(req.body);
+  const { title, content } = req.body;
+  let post: IPostResult;
 
   if (!isValidObjectId(id)) {
     return next(new PostNotFoundException(id));
   }
 
   try {
-    const post = await PostService.updatePost(id, title, content, fileId);
+    if (!req.file) {
+      if (req.body.file === 'same') {
+        post = await PostService.updatePost(id, title, content);
+      } else if (req.body.file === 'deleted') {
+        post = await PostService.updatePost(id, title, content, null);
+      }
+    } else {
+      const fileId = req.file.id;
+      post = await PostService.updatePost(id, title, content, fileId);
+    }
     return res.status(201).json({ isSucceeded: true, data: post });
   } catch (exceptions) {
     return next(exceptions);
