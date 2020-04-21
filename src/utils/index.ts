@@ -1,13 +1,11 @@
 import config from './config';
-import fileUploader from './fileUploader';
+import isEmptyOrSpaces from './isEmptyOrSpaces';
 import getDownloadFilename from './getDownloadFilename';
 import getPostResultWithFile from './getPostResultWithFile';
-import isEmptyOrSpaces from './isEmptyOrSpaces';
 
 export {
   config,
-  fileUploader,
+  isEmptyOrSpaces,
   getDownloadFilename,
   getPostResultWithFile,
-  isEmptyOrSpaces
 }
