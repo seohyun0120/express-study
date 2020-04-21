@@ -1,13 +1,13 @@
 import { Request, Response, NextFunction } from 'express';
 import { isValidObjectId } from 'mongoose';
-import { ICreatePost, IPostResult } from '../../../../interfaces/IPost';
+import { ICreatePost, IPostResult, IPostResultWithFile, IGetPostsResult } from '../../../../interfaces/IPost';
 import PostService from './post.service';
 import PostNotFoundException from '../../../../exceptions/PostNotFoundException';
 
 const getPosts = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const query = req.query;
-    const posts = await PostService.getPosts(query);
+    const posts: IGetPostsResult = await PostService.getPosts(query);
     return res.status(200).json({ isSucceeded: true, data: posts });
   } catch (error) {
     return next(error);
@@ -23,7 +23,7 @@ const getPost = async (req: Request, res: Response, next: NextFunction) => {
   }
 
   try {
-    const post = await PostService.getPost(id, type);
+    const post: IPostResultWithFile = await PostService.getPost(id, type);
     return res.status(200).json({ isSucceeded: true, data: post });
   } catch (exceptions) {
     return next(exceptions);
@@ -35,7 +35,7 @@ const createPost = async (req: Request, res: Response, next: NextFunction) => {
   const fileId = req.file ? req.file.id : null;
 
   try {
-    const post = await PostService.createPost(author, title, content, fileId);
+    const post: IPostResult = await PostService.createPost(author, title, content, fileId);
     return res.status(201).json({ isSucceeded: true, data: post });
   } catch (exceptions) {
     return next(exceptions);
@@ -76,7 +76,7 @@ const deletePost = async (req: Request, res: Response, next: NextFunction) => {
   }
 
   try {
-    const post = await PostService.deletePost(id);
+    const post: IPostResult = await PostService.deletePost(id);
     return res.status(200).json({ isSucceeded: true, data: post });
   } catch (exceptions) {
     return next(exceptions);

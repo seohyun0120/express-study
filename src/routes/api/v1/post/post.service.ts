@@ -47,8 +47,6 @@ const getPost = async (id: string, type: string) => {
     throw new Exceptions.PostNotFoundException(id);
   }
 
-  // file = post.fileId ? await FileModel.findOne({ _id: post.fileId }) : null;
-  // const result: IPostResultWithFile = { ...post.toObject({ versionKey: false }), file };
   const result: IPostResultWithFile = await getPostResultWithFile(post);
   return result;
 }
