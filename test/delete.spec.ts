@@ -59,7 +59,7 @@ describe('# DELETE', function () {
       res.body.data.should.have.property('viewNum');
       res.body.data.should.have.property('fileId');
 
-      const res2 = await chai.request(testApp).delete('/api/v1/posts/' + id);
+      const res2 = await chai.request(testApp).get('/api/v1/posts/' + id);
       res2.should.have.status(404);
       res2.body.should.be.a('object');
       res2.body.should.have.property('isSucceeded').eql(false);
