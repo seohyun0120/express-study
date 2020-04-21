@@ -1,9 +1,9 @@
 import { isNull, map, omit, isUndefined } from 'lodash';
-import Exceptions from '../../../../exceptions';
-import IFile from '../../../../interfaces/IFile';
-import { PostModel, FileModel } from '../../../../models';
-import { isEmptyOrSpaces, getPostResultWithFile } from '../../../../utils';
-import { IPostMongooseResult, IPostResult, IPost, IGetPostsResult, IGetQueryParams, Order, IPostResultWithFile } from '../../../../Interfaces/IPost';
+import Exceptions from '../exceptions';
+import IFile from '../interfaces/IFile';
+import { PostModel, FileModel } from '../models';
+import { isEmptyOrSpaces, getPostResultWithFile } from '../utils';
+import { IPostMongooseResult, IPostResult, IPost, IGetPostsResult, IGetQueryParams, Order, IPostResultWithFile } from '../Interfaces/IPost';
 
 const getPosts = async (query: IGetQueryParams) => {
   const page = query ? parseInt(query.page) : 1;

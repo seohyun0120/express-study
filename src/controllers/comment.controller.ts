@@ -1,9 +1,9 @@
 import { Request, Response, NextFunction } from 'express';
 import { isValidObjectId } from 'mongoose';
-import CommentServcie from './comment.service';
-import { ICreateComment, IUpdateComment, IPostResultWithFile } from '../../../../interfaces/IPost';
-import PostNotFoundException from '../../../../exceptions/PostNotFoundException';
-import CommentNotFoundException from '../../../../exceptions/CommentNotFoundException';
+import CommentServcie from '../services/comment.service';
+import { ICreateComment, IUpdateComment, IPostResultWithFile } from '../interfaces/IPost';
+import PostNotFoundException from '../exceptions/PostNotFoundException';
+import CommentNotFoundException from '../exceptions/CommentNotFoundException';
 
 const createComment = async (req: Request, res: Response, next: NextFunction) => {
   const { id } = req.params;

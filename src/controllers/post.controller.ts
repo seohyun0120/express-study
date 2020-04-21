@@ -1,8 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
 import { isValidObjectId } from 'mongoose';
-import { ICreatePost, IPostResult, IPostResultWithFile, IGetPostsResult } from '../../../../interfaces/IPost';
-import PostService from './post.service';
-import PostNotFoundException from '../../../../exceptions/PostNotFoundException';
+import { ICreatePost, IPostResult, IPostResultWithFile, IGetPostsResult } from '../interfaces/IPost';
+import PostService from '../services/post.service';
+import PostNotFoundException from '../exceptions/PostNotFoundException';
 
 const getPosts = async (req: Request, res: Response, next: NextFunction) => {
   try {
