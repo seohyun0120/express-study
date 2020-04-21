@@ -1,3 +1,4 @@
+import fs from 'fs';
 import chai from 'chai';
 import chaiHttp from 'chai-http';
 import { Db } from 'mongodb';
@@ -12,6 +13,7 @@ chai.should();
 
 const testApp: Application = express();
 let id: string = '';
+let updatedFileId: string = '';
 let mongoose: Db;
 
 describe('# PATCH', function () {
@@ -27,13 +29,20 @@ describe('# PATCH', function () {
   describe('## /PATCH/:id post', function () {
     beforeEach('initialize DB && create a post', async () => {
       await mongoose.dropDatabase();
-      const result = await chai.request(testApp).post('/api/v1/posts').send(testParams.createTest);
+      const result = await chai.request(testApp)
+        .post('/api/v1/posts')
+        .set('Content-Type', 'applicatioin/x-www-form-urlencoded')
+        .field('title', 'create post')
+        .field('author', 'tester')
+        .field('content', 'success')
+        .attach('file', fs.readFileSync('./assets/testImage.png'), 'testImage.png');
       id = result.body.data._id;
     });
 
     const invalidId = id + 'a';
+
     it('should not PATCH a post if id is invalid', async () => {
-      const res = await chai.request(testApp).patch('/api/v1/posts/' + invalidId).send(testData.updateTest);
+      const res = await chai.request(testApp).patch('/api/v1/posts/' + invalidId);
       res.should.have.status(404);
       res.body.should.be.a('object');
       res.body.should.have.property('isSucceeded').eql(false);
@@ -53,6 +62,7 @@ describe('# PATCH', function () {
     });
 
     it('should PATCH a post && check if record is PATCHed', async () => {
+      // title, content update
       const res = await chai.request(testApp).patch('/api/v1/posts/' + id).send(testData.updateTest);
       res.should.have.status(201);
       res.body.should.be.a('object');
@@ -70,6 +80,35 @@ describe('# PATCH', function () {
       res2.body.data.should.have.property('_id').eql(id);
       res2.body.data.should.have.property('title').eql(testParams.updateTest.title);
       res2.body.data.should.have.property('content').eql(testParams.updateTest.content);
+    });
+
+    it('should PATCH a file of post && check if record is PATCHed', async () => {
+      // file update
+      const res = await chai.request(testApp)
+        .patch('/api/v1/posts/' + id)
+        .set('Content-Type', 'applicatioin/x-www-form-urlencoded')
+        .field('title', 'create post')
+        .field('content', 'success')
+        .attach('file', fs.readFileSync('./assets/testFile.txt'), 'testFile.txt');
+
+      res.should.have.status(201);
+      res.body.should.be.a('object');
+      res.body.should.have.property('isSucceeded').eql(true);
+      res.body.should.have.property('data');
+      res.body.data.should.have.property('_id').eql(id);
+      res.body.data.should.have.property('fileId');
+
+      updatedFileId = res.body.data.fileId;
+
+      const res2 = await chai.request(testApp).get('/api/v1/posts/' + id);
+      res2.should.have.status(200);
+      res2.body.should.be.a('object');
+      res2.body.should.have.property('isSucceeded').eql(true);
+      res2.body.should.have.property('data');
+      res2.body.data.should.have.property('_id').eql(id);
+      res2.body.data.should.have.property('fileId');
+      res2.body.data.should.have.property('file');
+      res2.body.data.file.should.have.property('_id').eql(updatedFileId);
     });
   });
 });

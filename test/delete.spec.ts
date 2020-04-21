@@ -1,10 +1,10 @@
+import fs from 'fs';
 import chai from 'chai';
 import chaiHttp from 'chai-http';
 import { Db } from 'mongodb';
 import express, { Application } from 'express';
 import mongooseLoader from '../src/loaders/mongoose';
 import expressLoader from '../src/loaders/express';
-import testParams from './testData';
 
 chai.use(chaiHttp);
 chai.should();
@@ -26,12 +26,18 @@ describe('# DELETE', function () {
   describe('## /DELETE post', async () => {
     beforeEach('initialize DB && create a post', async () => {
       await mongoose.dropDatabase();
-      const result = await chai.request(testApp).post('/api/v1/posts').send(testParams.createTest);
+      const result = await chai.request(testApp)
+        .post('/api/v1/posts')
+        .set('Content-Type', 'applicatioin/x-www-form-urlencoded')
+        .field('title', 'create post')
+        .field('author', 'tester')
+        .field('content', 'success')
+        .attach('file', fs.readFileSync('./assets/testImage.png'), 'testImage.png');
       id = result.body.data._id;
     });
 
     const invalidId = id + 'a';
-    it('should not DELETE a post if id is invsalid', async () => {
+    it('should not DELETE a post if id is invalid', async () => {
       const res = await chai.request(testApp).delete('/api/v1/posts/' + invalidId);
       res.should.have.status(404);
       res.body.should.be.a('object');
@@ -50,6 +56,8 @@ describe('# DELETE', function () {
       res.body.data.should.have.property('author');
       res.body.data.should.have.property('title');
       res.body.data.should.have.property('content');
+      res.body.data.should.have.property('viewNum');
+      res.body.data.should.have.property('fileId');
 
       const res2 = await chai.request(testApp).delete('/api/v1/posts/' + id);
       res2.should.have.status(404);
