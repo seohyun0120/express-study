@@ -73,8 +73,8 @@ interface IGetQueryParams {
 }
 
 enum Order {
-  desc = 'desc',
-  asc = 'asc'
+  DESC,
+  ASC
 }
 
 interface IGetPostsResult {

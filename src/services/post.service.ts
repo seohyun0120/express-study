@@ -1,6 +1,5 @@
 import { isNull, map, omit, isUndefined } from 'lodash';
 import Exceptions from '../exceptions';
-import IFile from '../interfaces/IFile';
 import { PostModel, FileModel } from '../models';
 import { isEmptyOrSpaces, getPostResultWithFile } from '../utils';
 import { IPostMongooseResult, IPostResult, IPost, IGetPostsResult, IGetQueryParams, Order, IPostResultWithFile } from '../Interfaces/IPost';
@@ -8,7 +7,7 @@ import { IPostMongooseResult, IPostResult, IPost, IGetPostsResult, IGetQueryPara
 const getPosts = async (query: IGetQueryParams) => {
   const page = query ? parseInt(query.page) : 1;
   const limit = query ? parseInt(query.limit) : 10;
-  const orderBy = query.orderBy ? query.orderBy : Order.desc;
+  const orderBy = query.orderBy ? query.orderBy : Order.DESC;
   const totalCount = await PostModel.countDocuments({});
 
   const posts: IPostMongooseResult[] = await PostModel.find({}).skip((page - 1) * limit).limit(limit).sort({ _id: orderBy }).lean();
@@ -19,7 +18,6 @@ const getPosts = async (query: IGetQueryParams) => {
 
 const getPost = async (id: string, type: string) => {
   let post: IPost;
-  let file: IFile;
   let idQueryOption: object;
   let sortOption: object;
 
