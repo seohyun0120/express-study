@@ -1,8 +1,8 @@
 import { isNull } from 'lodash';
 import Exceptions from '../../../../exceptions';
 import IFile from '../../../../Interfaces/IFile';
+import { isEmptyOrSpaces } from '../../../../utils';
 import { PostModel, FileModel } from '../../../../models';
-import isEmptyOrSpaces from '../../../../utils/isEmptyOrSpaces'
 import { IPost, IPostWithFile } from '../../../../Interfaces/IPost';
 
 const createComment = async (

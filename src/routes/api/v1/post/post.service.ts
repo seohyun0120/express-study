@@ -1,8 +1,8 @@
 import { isNull, map, omit, isUndefined } from 'lodash';
 import Exceptions from '../../../../exceptions';
-import { isEmptyOrSpaces } from '../../../../utils';
-import { PostModel, FileModel } from '../../../../models';
 import IFile from '../../../../interfaces/IFile';
+import { PostModel, FileModel } from '../../../../models';
+import { isEmptyOrSpaces } from '../../../../utils';
 import { IPostMongooseResult, IPostResult, IPost, IGetPostsResult, IGetQueryParams, Order, IPostWithFile } from '../../../../Interfaces/IPost';
 
 const getPosts = async (query: IGetQueryParams) => {
