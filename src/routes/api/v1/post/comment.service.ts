@@ -1,17 +1,14 @@
 import { isNull } from 'lodash';
 import Exceptions from '../../../../exceptions';
-import IFile from '../../../../Interfaces/IFile';
-import { isEmptyOrSpaces } from '../../../../utils';
-import { PostModel, FileModel } from '../../../../models';
-import { IPost, IPostWithFile } from '../../../../Interfaces/IPost';
+import { isEmptyOrSpaces, getPostResultWithFile } from '../../../../utils';
+import { PostModel } from '../../../../models';
+import { IPost, IPostResultWithFile } from '../../../../Interfaces/IPost';
 
 const createComment = async (
   id: string,
   author: string,
   text: string
 ) => {
-  let file: IFile;
-  let post: IPost;
   if (isEmptyOrSpaces(author) && isEmptyOrSpaces(text)) {
     throw new Exceptions.AuthorTitleAreEmptyException();
   } else if (isEmptyOrSpaces(author)) {
@@ -20,7 +17,7 @@ const createComment = async (
     throw new Exceptions.TextIsEmptyException();
   }
 
-  post = await PostModel.findByIdAndUpdate(
+  const post: IPost = await PostModel.findByIdAndUpdate(
     id,
     { $push: { "comments": { author, text } } },
     { new: true }
@@ -30,20 +27,16 @@ const createComment = async (
     throw new Exceptions.PostNotFoundException(id);
   }
 
-  file = post.fileId ? await FileModel.findOne({ _id: post.fileId }) : null;
-
-  const result: IPostWithFile = { ...post.toObject({ versionKey: false }), file };
+  const result: IPostResultWithFile = await getPostResultWithFile(post);
   return result;
 }
 
 const updateComment = async (id: string, commentId: string, text: string) => {
-  let post: IPost;
-  let file: IFile;
   if (isEmptyOrSpaces(text)) {
     throw new Exceptions.TextIsEmptyException();
   }
 
-  post = await PostModel.findOneAndUpdate(
+  const post: IPost = await PostModel.findOneAndUpdate(
     { _id: id, "comments._id": commentId },
     { $set: { "comments.$.text": text } },
     { new: true }
@@ -55,17 +48,12 @@ const updateComment = async (id: string, commentId: string, text: string) => {
     throw new Exceptions.TextIsEmptyException();
   }
 
-  file = post.fileId ? await FileModel.findOne({ _id: post.fileId }) : null;
-
-  const result: IPostWithFile = { ...post.toObject({ versionKey: false }), file };
+  const result: IPostResultWithFile = await getPostResultWithFile(post);
   return result;
 }
 
 const deleteComment = async (id: string, commentId: string) => {
-  let post: IPost;
-  let file: IFile;
-
-  post = await PostModel.findOneAndUpdate(
+  const post: IPost = await PostModel.findOneAndUpdate(
     { "_id": id, "comments._id": commentId },
     { $pull: { comments: { _id: commentId } } },
     { new: true }
@@ -75,9 +63,7 @@ const deleteComment = async (id: string, commentId: string) => {
     throw new Exceptions.PostNotFoundException(id);
   }
 
-  file = post.fileId ? await FileModel.findOne({ _id: post.fileId }) : null;
-
-  const result: IPostWithFile = { ...post.toObject({ versionKey: false }), file };
+  const result: IPostResultWithFile = await getPostResultWithFile(post);
   return result;
 }
 

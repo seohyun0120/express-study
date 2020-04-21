@@ -2,8 +2,8 @@ import { isNull, map, omit, isUndefined } from 'lodash';
 import Exceptions from '../../../../exceptions';
 import IFile from '../../../../interfaces/IFile';
 import { PostModel, FileModel } from '../../../../models';
-import { isEmptyOrSpaces } from '../../../../utils';
-import { IPostMongooseResult, IPostResult, IPost, IGetPostsResult, IGetQueryParams, Order, IPostWithFile } from '../../../../Interfaces/IPost';
+import { isEmptyOrSpaces, getPostResultWithFile } from '../../../../utils';
+import { IPostMongooseResult, IPostResult, IPost, IGetPostsResult, IGetQueryParams, Order, IPostResultWithFile } from '../../../../Interfaces/IPost';
 
 const getPosts = async (query: IGetQueryParams) => {
   const page = query ? parseInt(query.page) : 1;
@@ -47,9 +47,9 @@ const getPost = async (id: string, type: string) => {
     throw new Exceptions.PostNotFoundException(id);
   }
 
-  file = post.fileId ? await FileModel.findOne({ _id: post.fileId }) : null;
-
-  const result: IPostWithFile = { ...post.toObject({ versionKey: false }), file };
+  // file = post.fileId ? await FileModel.findOne({ _id: post.fileId }) : null;
+  // const result: IPostResultWithFile = { ...post.toObject({ versionKey: false }), file };
+  const result: IPostResultWithFile = await getPostResultWithFile(post);
   return result;
 }
 
