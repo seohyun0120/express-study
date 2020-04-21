@@ -10,16 +10,6 @@ interface IPost extends Document {
   fileId: string;
 }
 
-interface IPostWithFile extends Document {
-  author: string;
-  title: string;
-  content: string;
-  viewNum: number;
-  comments: IComment[];
-  fileId: string;
-  file: IFile;
-}
-
 interface IComment extends Document {
   author: string;
   text: string;
@@ -66,15 +56,20 @@ interface IPostResult {
   fileId: string;
 }
 
+interface IPostResultWithFile extends Document {
+  author: string;
+  title: string;
+  content: string;
+  viewNum: number;
+  comments: IComment[];
+  fileId: string;
+  file: IFile;
+}
+
 interface IGetQueryParams {
   page: string;
   limit: string;
   orderBy: Order;
-}
-
-interface IGetPostResult {
-  post: IPost;
-  file: IFile;
 }
 
 enum Order {
@@ -113,15 +108,14 @@ interface IUpdateComment {
 
 export {
   IPost,
-  IPostWithFile,
+  IPostMongooseResult,
+  IPostResult,
+  IPostResultWithFile,
+  IGetQueryParams,
+  Order,
+  IGetPostsResult,
   ICreatePost,
   ICreateComment,
   IUpdatePost,
   IUpdateComment,
-  IPostMongooseResult,
-  IPostResult,
-  IGetPostsResult,
-  IGetPostResult,
-  IGetQueryParams,
-  Order,
 }
