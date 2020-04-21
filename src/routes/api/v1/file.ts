@@ -1,5 +1,5 @@
 import express from 'express';
-import FileController from './file.controller';
+import FileController from '../../../controllers/file.controller';
 
 const router = express.Router();
 router.get('/download/:filename', FileController.getFile);
