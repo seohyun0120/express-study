@@ -1,7 +1,23 @@
+const createTest = {
+  author: 'tester',
+  title: 'create post',
+  content: 'success',
+  file: 'same',
+}
+
+const createCommentTest = {
+  author: 'tester2',
+  text: 'create comment'
+}
+
 const updateTest = {
   title: 'update post',
   content: 'success',
   file: 'same',
+}
+
+const updateCommentTest = {
+  text: 'update comment'
 }
 
 const code2Test = {
@@ -25,4 +41,8 @@ const code4Test = {
   file: 'same'
 }
 
-export default { updateTest, code2Test, code3Test, code4Test }
+const code6Test = {
+  text: '     ',
+}
+
+export default { createTest, createCommentTest, updateTest, updateCommentTest, code2Test, code3Test, code4Test, code6Test }
