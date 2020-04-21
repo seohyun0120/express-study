@@ -1,9 +1,9 @@
 import { isNull } from 'lodash';
-import { IPostResult, IPost, IPostWithFile } from '../../../Interfaces/IPost';
-import IFile from '../../../Interfaces/IFile';
-import { PostModel, FileModel } from '../../../models';
-import Exceptions from '../../../exceptions';
-import isEmptyOrSpaces from '../../../utils/isEmptyOrSpaces'
+import Exceptions from '../../../../exceptions';
+import IFile from '../../../../Interfaces/IFile';
+import { PostModel, FileModel } from '../../../../models';
+import isEmptyOrSpaces from '../../../../utils/isEmptyOrSpaces'
+import { IPost, IPostWithFile } from '../../../../Interfaces/IPost';
 
 const createComment = async (
   id: string,

@@ -1,9 +1,9 @@
 import express from 'express';
-import api from './api/v1/index';
-import PostController from './api/v1/post.controller';
+import posts from './api/v1/post';
+import files from './api/v1/file';
 const router = express.Router();
 
-router.use('/api/v1/posts', api);
-router.get('/api/v1/download/:filename', PostController.getPostFile);
+router.use('/api/v1/posts', posts);
+router.use('/api/v1/files', files);
 
 export default router;

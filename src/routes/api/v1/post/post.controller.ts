@@ -1,8 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
 import { isValidObjectId } from 'mongoose';
-import { ICreatePost, IPostResult } from '../../../interfaces/IPost';
+import { ICreatePost, IPostResult } from '../../../../interfaces/IPost';
 import PostService from './post.service';
-import PostNotFoundException from '../../../exceptions/PostNotFoundException';
+import PostNotFoundException from '../../../../exceptions/PostNotFoundException';
 
 const getPosts = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -25,16 +25,6 @@ const getPost = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const post = await PostService.getPost(id, type);
     return res.status(200).json({ isSucceeded: true, data: post });
-  } catch (exceptions) {
-    return next(exceptions);
-  }
-}
-
-const getPostFile = async (req: Request, res: Response, next: NextFunction) => {
-  const { filename } = req.params;
-
-  try {
-    return await PostService.getPostFile(filename, req, res);
   } catch (exceptions) {
     return next(exceptions);
   }
@@ -93,4 +83,4 @@ const deletePost = async (req: Request, res: Response, next: NextFunction) => {
   }
 }
 
-export default { getPosts, getPost, getPostFile, createPost, updatePost, deletePost };
+export default { getPosts, getPost, createPost, updatePost, deletePost };
