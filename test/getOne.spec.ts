@@ -1,16 +1,17 @@
+import fs from 'fs';
 import chai from 'chai';
 import chaiHttp from 'chai-http';
 import { Db } from 'mongodb';
 import express, { Application } from 'express';
 import mongooseLoader from '../src/loaders/mongoose';
 import expressLoader from '../src/loaders/express';
-import testParams from './testData';
 
 chai.use(chaiHttp);
 chai.should();
 
 const testApp: Application = express();
 let id: string = '';
+let fileId: string = '';
 let mongoose: Db;
 
 describe('# CREATE', function () {
@@ -25,8 +26,15 @@ describe('# CREATE', function () {
 
   describe('## /GET/:id post', function () {
     before('create a post', async () => {
-      const result = await chai.request(testApp).post('/api/v1/posts').send(testParams.createTest);
+      const result = await chai.request(testApp)
+        .post('/api/v1/posts')
+        .set('Content-Type', 'applicatioin/x-www-form-urlencoded')
+        .field('title', 'create post')
+        .field('author', 'tester')
+        .field('content', 'success')
+        .attach('file', fs.readFileSync('./assets/testImage.png'), 'testImage.png');
       id = result.body.data._id;
+      fileId = result.body.data.fileId;
     });
 
     it('should not GET a post if id is invalid', async () => {
@@ -50,6 +58,11 @@ describe('# CREATE', function () {
       res.body.data.should.have.property('author');
       res.body.data.should.have.property('title');
       res.body.data.should.have.property('content');
+      res.body.data.should.have.property('viewNum');
+      res.body.data.should.have.property('comments');
+      res.body.data.should.have.property('fileId');
+      res.body.data.should.have.property('file');
+      res.body.data.file.should.have.property('_id').eql(fileId);
     });
   });
 });

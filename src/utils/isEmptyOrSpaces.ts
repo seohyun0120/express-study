@@ -1,4 +1,4 @@
 export default function isEmptyOrSpaces(str: string) {
   const reg = /^\s*$/;
-  return reg.test(str);
+  return (!str || reg.test(str));
 }

@@ -1,13 +1,13 @@
-import { isNull, map, omit } from 'lodash';
-import { IPostMongooseResult, IPostResult, IPost, IGetPostsResult, IGetQueryParams, Order } from '../../../Interfaces/IPost';
-import { PostModel } from '../../../models/post';
-import Exceptions from '../../../exceptions';
-import isEmptyOrSpaces from '../../../utils/isEmptyOrSpaces';
+import { isNull, map, omit, isUndefined } from 'lodash';
+import Exceptions from '../exceptions';
+import { PostModel, FileModel } from '../models';
+import { isEmptyOrSpaces, getPostResultWithFile } from '../utils';
+import { IPostMongooseResult, IPostResult, IPost, IGetPostsResult, IGetQueryParams, Order, IPostResultWithFile } from '../Interfaces/IPost';
 
 const getPosts = async (query: IGetQueryParams) => {
   const page = query ? parseInt(query.page) : 1;
   const limit = query ? parseInt(query.limit) : 10;
-  const orderBy = query.orderBy ? query.orderBy : Order.desc;
+  const orderBy = query.orderBy ? query.orderBy : Order.DESC;
   const totalCount = await PostModel.countDocuments({});
 
   const posts: IPostMongooseResult[] = await PostModel.find({}).skip((page - 1) * limit).limit(limit).sort({ _id: orderBy }).lean();
@@ -45,14 +45,15 @@ const getPost = async (id: string, type: string) => {
     throw new Exceptions.PostNotFoundException(id);
   }
 
-  const result: IPostResult = post.toObject({ versionKey: false });
+  const result: IPostResultWithFile = await getPostResultWithFile(post);
   return result;
 }
 
 const createPost = async (
   author: string,
   title: string,
-  content?: string
+  content?: string,
+  fileId?: string
 ) => {
   if (isEmptyOrSpaces(author) && isEmptyOrSpaces(title)) {
     throw new Exceptions.AuthorTitleAreEmptyException();
@@ -62,24 +63,51 @@ const createPost = async (
     throw new Exceptions.TitleIsEmptyException();
   }
 
-  const post: IPost = await PostModel.create({ title, author, content });
+  const post: IPost = await PostModel.create({
+    title,
+    author,
+    content,
+    fileId,
+  });
+
   const result: IPostResult = post.toObject({ versionKey: false });
   return result;
 }
 
-const updatePost = async (id: string, title: string, content?: string) => {
-  const post: IPost = await PostModel.findByIdAndUpdate(id, {
-    title,
-    content
-  }, { new: true });
+const updatePost = async (id: string, title: string, content?: string, fileId?: string) => {
+  let updatedPost: IPost;
 
-  if (isNull(post)) {
+  if (isUndefined(fileId)) {
+    updatedPost = await PostModel.findByIdAndUpdate(id, {
+      title,
+      content,
+    }, { new: true });
+  } else {
+    let beforePost = await PostModel.findById(id);
+    await FileModel.findByIdAndDelete(beforePost.fileId);
+
+    if (isNull(fileId)) {
+      updatedPost = await PostModel.findByIdAndUpdate(id, {
+        title,
+        content,
+        fileId: null
+      }, { new: true });
+    } else {
+      updatedPost = await PostModel.findByIdAndUpdate(id, {
+        title,
+        content,
+        fileId
+      }, { new: true });
+    }
+  }
+
+  if (isNull(updatedPost)) {
     throw new Exceptions.PostNotFoundException(id);
   } else if (isEmptyOrSpaces(title)) {
     throw new Exceptions.TitleIsEmptyException();
   }
 
-  const result: IPostResult = post.toObject({ versionKey: false });
+  const result: IPostResult = updatedPost.toObject({ versionKey: false });
   return result;
 }
 
@@ -88,6 +116,13 @@ const deletePost = async (id: string) => {
 
   if (isNull(post)) {
     throw new Exceptions.PostNotFoundException(id);
+  }
+
+  if (post.fileId) {
+    const file = await FileModel.findByIdAndDelete(post.fileId);
+    if (isNull(file)) {
+      throw new Exceptions.FileNotFoundException(post.fileId);
+    }
   }
 
   const result: IPostResult = post.toObject({ versionKey: false });

@@ -1,3 +1,4 @@
+import fs from 'fs';
 import chai from 'chai';
 import chaiHttp from 'chai-http';
 import { Db } from 'mongodb';
@@ -54,8 +55,16 @@ describe('# POST', function () {
     });
 
     it('should CREATE a post && check if record is CREATEd', async () => {
-      const res = await chai.request(testApp).post('/api/v1/posts').send(testParams.createTest);
+      const res = await chai.request(testApp)
+        .post('/api/v1/posts')
+        .set('Content-Type', 'applicatioin/x-www-form-urlencoded')
+        .field('title', 'create post')
+        .field('author', 'tester')
+        .field('content', 'success')
+        .attach('file', fs.readFileSync('./assets/testImage.png'), 'testImage.png');
       const id = res.body.data._id;
+      const fileId = res.body.data.fileId;
+
       res.should.have.status(201);
       res.body.should.be.a('object');
       res.body.should.have.property('data');
@@ -63,6 +72,7 @@ describe('# POST', function () {
       res.body.data.should.have.property('author');
       res.body.data.should.have.property('title');
       res.body.data.should.have.property('content');
+      res.body.data.should.have.property('fileId');
 
       const res2 = await chai.request(testApp).get('/api/v1/posts/' + id);
       res2.should.have.status(200);
@@ -72,6 +82,9 @@ describe('# POST', function () {
       res2.body.data.should.have.property('_id').eql(id);
       res2.body.data.should.have.property('title');
       res2.body.data.should.have.property('content');
+      res2.body.data.should.have.property('fileId');
+      res2.body.data.should.have.property('file');
+      res2.body.data.file.should.have.property('_id').eql(fileId);
     });
   });
 });

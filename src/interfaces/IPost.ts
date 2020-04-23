@@ -1,4 +1,5 @@
 import { Document } from 'mongoose';
+import IFile from './IFile';
 
 interface IPost extends Document {
   author: string;
@@ -6,6 +7,7 @@ interface IPost extends Document {
   content: string;
   viewNum: number;
   comments: IComment[];
+  fileId: string;
 }
 
 interface IComment extends Document {
@@ -30,7 +32,8 @@ interface IPostMongooseResult {
       createdAt: Date;
       updatedAt: Date;
     }
-  ]
+  ];
+  fileId: string;
 }
 
 interface IPostResult {
@@ -50,6 +53,17 @@ interface IPostResult {
       updatedAt: Date;
     }
   ]
+  fileId: string;
+}
+
+interface IPostResultWithFile extends Document {
+  author: string;
+  title: string;
+  content: string;
+  viewNum: number;
+  comments: IComment[];
+  fileId: string;
+  file: IFile;
 }
 
 interface IGetQueryParams {
@@ -59,8 +73,8 @@ interface IGetQueryParams {
 }
 
 enum Order {
-  desc = 'desc',
-  asc = 'asc'
+  DESC,
+  ASC
 }
 
 interface IGetPostsResult {
@@ -74,6 +88,7 @@ interface ICreatePost {
   author: string;
   title: string;
   content?: string;
+  fileId: string;
 }
 
 interface ICreateComment {
@@ -84,6 +99,7 @@ interface ICreateComment {
 interface IUpdatePost {
   title: string;
   content?: string;
+  fileId: string;
 }
 
 interface IUpdateComment {
@@ -92,13 +108,14 @@ interface IUpdateComment {
 
 export {
   IPost,
+  IPostMongooseResult,
+  IPostResult,
+  IPostResultWithFile,
+  IGetQueryParams,
+  Order,
+  IGetPostsResult,
   ICreatePost,
   ICreateComment,
   IUpdatePost,
   IUpdateComment,
-  IPostMongooseResult,
-  IPostResult,
-  IGetPostsResult,
-  IGetQueryParams,
-  Order,
 }

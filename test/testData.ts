@@ -1,32 +1,48 @@
-import { ICreatePost, IUpdatePost } from "../src/interfaces/IPost";
-
-const createTest: ICreatePost = {
+const createTest = {
   author: 'tester',
   title: 'create post',
-  content: 'success'
+  content: 'success',
+  file: 'same',
 }
 
-const updateTest: IUpdatePost = {
+const createCommentTest = {
+  author: 'tester2',
+  text: 'create comment'
+}
+
+const updateTest = {
   title: 'update post',
-  content: 'success'
+  content: 'success',
+  file: 'same',
 }
 
-const code2Test: ICreatePost = {
+const updateCommentTest = {
+  text: 'update comment'
+}
+
+const code2Test = {
   author: '          ',
   title: '',
-  content: 'code 2 error'
+  content: 'code 2 error',
+  file: 'same'
 }
 
-const code3Test: ICreatePost = {
+const code3Test = {
   author: '       ',
   title: 'error 3',
-  content: 'code 3 error'
+  content: 'code 3 error',
+  file: 'same'
 }
 
-const code4Test: ICreatePost = {
+const code4Test = {
   author: 'tester',
   title: '       ',
-  content: 'code 4 error'
+  content: 'code 4 error',
+  file: 'same'
 }
 
-export default { createTest, updateTest, code2Test, code3Test, code4Test }
+const code6Test = {
+  text: '     ',
+}
+
+export default { createTest, createCommentTest, updateTest, updateCommentTest, code2Test, code3Test, code4Test, code6Test }

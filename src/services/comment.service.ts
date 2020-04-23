@@ -1,8 +1,8 @@
 import { isNull } from 'lodash';
-import { IPostResult, IPost } from '../../../Interfaces/IPost';
-import { PostModel } from '../../../models/post';
-import Exceptions from '../../../exceptions';
-import isEmptyOrSpaces from '../../../utils/isEmptyOrSpaces'
+import Exceptions from '../exceptions';
+import { isEmptyOrSpaces, getPostResultWithFile } from '../utils';
+import { PostModel } from '../models';
+import { IPost, IPostResultWithFile } from '../Interfaces/IPost';
 
 const createComment = async (
   id: string,
@@ -27,7 +27,7 @@ const createComment = async (
     throw new Exceptions.PostNotFoundException(id);
   }
 
-  const result: IPostResult = post.toObject({ versionKey: false });
+  const result: IPostResultWithFile = await getPostResultWithFile(post);
   return result;
 }
 
@@ -48,7 +48,7 @@ const updateComment = async (id: string, commentId: string, text: string) => {
     throw new Exceptions.TextIsEmptyException();
   }
 
-  const result: IPostResult = post.toObject({ versionKey: false });
+  const result: IPostResultWithFile = await getPostResultWithFile(post);
   return result;
 }
 
@@ -63,7 +63,7 @@ const deleteComment = async (id: string, commentId: string) => {
     throw new Exceptions.PostNotFoundException(id);
   }
 
-  const result: IPostResult = post.toObject({ versionKey: false });
+  const result: IPostResultWithFile = await getPostResultWithFile(post);
   return result;
 }
 

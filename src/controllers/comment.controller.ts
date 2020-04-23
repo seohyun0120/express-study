@@ -1,9 +1,9 @@
 import { Request, Response, NextFunction } from 'express';
 import { isValidObjectId } from 'mongoose';
-import { ICreateComment, IUpdateComment } from '../../../interfaces/IPost';
-import CommentServcie from './comment.service';
-import PostNotFoundException from '../../../exceptions/PostNotFoundException';
-import CommentNotFoundException from '../../../exceptions/CommentNotFoundException';
+import CommentServcie from '../services/comment.service';
+import { ICreateComment, IUpdateComment, IPostResultWithFile } from '../interfaces/IPost';
+import PostNotFoundException from '../exceptions/PostNotFoundException';
+import CommentNotFoundException from '../exceptions/CommentNotFoundException';
 
 const createComment = async (req: Request, res: Response, next: NextFunction) => {
   const { id } = req.params;
@@ -14,7 +14,7 @@ const createComment = async (req: Request, res: Response, next: NextFunction) =>
   }
 
   try {
-    const post = await CommentServcie.createComment(id, author, text);
+    const post: IPostResultWithFile = await CommentServcie.createComment(id, author, text);
     return res.status(201).json({ isSucceeded: true, data: post });
   } catch (exceptions) {
     return next(exceptions);
@@ -32,7 +32,7 @@ const updateComment = async (req: Request, res: Response, next: NextFunction) =>
   }
 
   try {
-    const post = await CommentServcie.updateComment(id, commentId, text);
+    const post: IPostResultWithFile = await CommentServcie.updateComment(id, commentId, text);
     return res.status(201).json({ isSucceeded: true, data: post });
   } catch (exceptions) {
     return next(exceptions);
@@ -48,7 +48,7 @@ const deleteComment = async (req: Request, res: Response, next: NextFunction) =>
   }
 
   try {
-    const post = await CommentServcie.deleteComment(id, commentId);
+    const post: IPostResultWithFile = await CommentServcie.deleteComment(id, commentId);
     return res.status(200).json({ isSucceeded: true, data: post });
   } catch (exceptions) {
     return next(exceptions);
