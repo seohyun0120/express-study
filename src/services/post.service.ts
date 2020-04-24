@@ -2,7 +2,7 @@ import { isNull, map, omit, isUndefined } from 'lodash';
 import Exceptions from '../exceptions';
 import { PostModel, FileModel } from '../models';
 import { isEmptyOrSpaces, getPostResultWithFile } from '../utils';
-import { IPostMongooseResult, IPostResult, IPost, IGetPostsResult, IGetQueryParams, Order, IPostResultWithFile } from '../Interfaces/IPost';
+import { IPostMongooseResult, IPostResult, IPost, IGetPostsResult, IGetQueryParams, Order, IPostResultWithFile } from '../interfaces/IPost';
 
 const getPosts = async (query: IGetQueryParams) => {
   const page = query ? parseInt(query.page) : 1;
