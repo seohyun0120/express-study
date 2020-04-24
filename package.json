@@ -1,9 +1,10 @@
 {
   "name": "backend",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "src/app.ts",
   "scripts": {
-    "start": "env NODE_ENV=prod tsc && node dist",
+    "build": "tsc",
+    "start": "env NODE_ENV=prod node build/app",
     "start:dev": "env NODE_ENV=dev nodemon",
     "start:home": "env NODE_ENV=home nodemon",
     "test": "env NODE_ENV=test mocha --exit --timeout 10000"
