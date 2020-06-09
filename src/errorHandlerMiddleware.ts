@@ -1,8 +1,10 @@
 import { NextFunction, Request, Response } from 'express';
 import HttpException from './exceptions/HttpException';
+import logger from './logger';
 
 function errorHandleMiddleware(err: Error, req: Request, res: Response, next: NextFunction) {
   if (err instanceof HttpException) {
+    logger.error(`code: 500]\nmsg:${err.message}`);
     return res.status(err.status).json({
       isSucceeded: false,
       error: {
@@ -12,6 +14,7 @@ function errorHandleMiddleware(err: Error, req: Request, res: Response, next: Ne
     });
   };
 
+  logger.error(`[code: 500]\nmsg:${err.message}`);
   return res.status(500).json({
     isSucceeded: false,
     error: {
