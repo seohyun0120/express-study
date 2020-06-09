@@ -1,5 +1,6 @@
 import loaders from './loaders';
 import express, { Application } from 'express';
+import logger from './logger';
 
 async function startServer() {
   const app: Application = express();
@@ -7,11 +8,11 @@ async function startServer() {
 
   app.listen(8080, (err) => {
     if (err) {
-      console.log(err);
+      logger.error(err);
       return;
     }
 
-    console.log('Ready to start SERVER');
+    logger.info('Ready to start SERVER');
   });
 };
 

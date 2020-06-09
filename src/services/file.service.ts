@@ -6,6 +6,7 @@ import Exceptions from '../exceptions';
 import IFile from "../interfaces/IFile";
 import FileController from '../controllers/file.controller';
 import { getDownloadFilename } from '../utils';
+import logger from "../logger";
 
 const getFile = async (filename: string, req: Request, res: Response) => {
   const file: IFile = await FileModel.findOne({ filename });
@@ -24,11 +25,11 @@ const getFile = async (filename: string, req: Request, res: Response) => {
   const stream = gridFSBucket.openDownloadStreamByName(filename);
   stream
     .on('error', (err) => {
-      console.log(err);
+      logger.error(err);
       res.end();
     })
     .on('finish', () => {
-      console.log('done');
+      logger.info('done');
       process.exit(0);
     });
   return stream.pipe(res);
