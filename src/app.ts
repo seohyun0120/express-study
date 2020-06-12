@@ -1,6 +1,6 @@
 import loaders from './loaders';
 import express, { Application } from 'express';
-import logger from './logger';
+import logger, { customLogger } from './logger';
 
 async function startServer() {
   const app: Application = express();
@@ -13,6 +13,9 @@ async function startServer() {
     }
 
     logger.info('Ready to start SERVER');
+    logger.debug(`let's debug something here!`);
+    customLogger.customedInfo('customed logger is here!');
+
   });
 };
 
